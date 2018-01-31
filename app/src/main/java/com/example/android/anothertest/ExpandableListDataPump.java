@@ -143,7 +143,7 @@ public class ExpandableListDataPump {
                     GradeListEntry.COLUMN_GRADETYPECODE,
                     GradeListEntry.COLUMN_RELATIVEDIFFICULTY};
 
-            // Perform a query on the pets table
+            // Perform a query on the GradeList table
             Cursor cursor = db.query(
                     GradeListEntry.TABLE_NAME,   // The table to query
                     projection,            // The columns to return
