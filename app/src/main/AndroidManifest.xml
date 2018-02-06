@@ -19,11 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LogBook" />
         <activity android:name=".AddWorkout" />
+        <activity android:name=".CalendarOverview" />
+        <activity android:name=".ChildListHolder" />
+        <activity android:name=".LogBook" />
+        <activity android:name=".ParentListHolder" />
         <activity android:name=".LogClimb" />
         <activity android:name=".ExpandableListHolder" />
-        <activity android:name=".CalendarOverview"></activity>
     </application>
 
 </manifest>

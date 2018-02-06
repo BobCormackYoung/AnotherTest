@@ -61,8 +61,12 @@ public class LogClimb extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 // The user picked a grade,
-                String outputString = data.getStringExtra("OutputData");
+                //String outputString = data.getStringExtra("OutputData");
                 // Find the view & change the displayed result
+                //EditText gradeView = (EditText) findViewById(R.id.editText4);
+                //gradeView.setText(outputString);
+                int output = data.getIntExtra("OutputData", 0);
+                String outputString = Integer.toString(output);
                 EditText gradeView = (EditText) findViewById(R.id.editText4);
                 gradeView.setText(outputString);
             }
@@ -82,9 +86,10 @@ public class LogClimb extends AppCompatActivity {
     // method for launching the activity for picking the grade
     private void pickGrade() {
         // Create new intent
-        Intent selectorIntent = new Intent(this, ExpandableListHolder.class);
+        //Intent selectorIntent = new Intent(this, ExpandableListHolder.class);
+        Intent selectorIntent = new Intent(this, ParentListHolder.class);
         // Add extra information to intent so that subsequent activity knows that we're requesting to generate list of grades
-        selectorIntent.putExtra("inputType","grade_type");
+        //selectorIntent.putExtra("inputType","grade_type");
         // Start activity for getting result
         startActivityForResult(selectorIntent, PICK_GRADE_REQUEST);
     }

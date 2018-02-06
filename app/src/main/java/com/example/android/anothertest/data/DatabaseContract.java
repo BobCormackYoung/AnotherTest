@@ -12,6 +12,7 @@ public final class DatabaseContract {
 
     public static final class AscentEntry implements BaseColumns{
 
+
         public final static String TABLE_NAME = "AscentType";
 
         public final static String _ID = BaseColumns._ID;
