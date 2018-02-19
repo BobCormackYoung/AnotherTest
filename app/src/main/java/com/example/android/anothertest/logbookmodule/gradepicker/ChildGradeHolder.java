@@ -1,19 +1,23 @@
-package com.example.android.anothertest;
+package com.example.android.anothertest.logbookmodule.gradepicker;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import com.example.android.anothertest.R;
+import com.example.android.anothertest.data.DatabaseHelper;
 
 /**
- * Created by Bobek on 01/02/2018.
+ * Created by Bobek on 11/02/2018.
  */
 
-public class ChildListHolder extends AppCompatActivity {
+public class ChildGradeHolder extends AppCompatActivity {
 
     private static final String TAG = "NestListHold_Tag";
 
@@ -25,23 +29,12 @@ public class ChildListHolder extends AppCompatActivity {
         Intent selectorIntent = getIntent();
         int selectorID = selectorIntent.getIntExtra("selector", 0);
 
-        final ArrayList<ListItem> childListItems = new ArrayList<ListItem>();
+        //Create handler to connect to SQLite DB
+        DatabaseHelper handler = new DatabaseHelper(this);
+        SQLiteDatabase database = handler.getWritableDatabase();
+        Cursor cursor = database.rawQuery("SELECT  * FROM GradeList where GradeTypeCode=" + selectorID, null);
 
-        if (selectorID == 1) {
-            childListItems.add(new ListItem(1, "Test1a"));
-            childListItems.add(new ListItem(2, "Test1b"));
-            childListItems.add(new ListItem(3, "Test1c"));
-        } else if (selectorID == 2) {
-            childListItems.add(new ListItem(4, "Test2a"));
-            childListItems.add(new ListItem(5, "Test2b"));
-            childListItems.add(new ListItem(6, "Test2c"));
-        } else if (selectorID == 3) {
-            childListItems.add(new ListItem(7, "Test3a"));
-            childListItems.add(new ListItem(8, "Test3b"));
-            childListItems.add(new ListItem(9, "Test3c"));
-        }
-
-        ChildListAdapter childAdapter = new ChildListAdapter(this, childListItems);
+        ChildGradeAdapter childAdapter = new ChildGradeAdapter(this, cursor);
 
         ListView childListView = (ListView) findViewById(R.id.child_list);
 
@@ -51,9 +44,9 @@ public class ChildListHolder extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                ListItem childListItem = childListItems.get(position);
+                Log.i(TAG, Long.toString(id));
 
-                int output = childListItem.getListItemID();
+                int output = (int) id;
 
                 Intent outputIntent = new Intent();
                 outputIntent.putExtra("OutputData", output);
@@ -65,3 +58,4 @@ public class ChildListHolder extends AppCompatActivity {
 
     }
 }
+

@@ -1,4 +1,4 @@
-package com.example.android.anothertest;
+package com.example.android.anothertest.logbookmodule;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.example.android.anothertest.ExpandableListHolder;
+import com.example.android.anothertest.R;
 
 public class AddWorkout extends AppCompatActivity {
 

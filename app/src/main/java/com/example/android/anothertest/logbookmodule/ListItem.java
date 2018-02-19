@@ -1,4 +1,4 @@
-package com.example.android.anothertest;
+package com.example.android.anothertest.logbookmodule;
 
 /**
  * Created by Bobek on 31/01/2018.

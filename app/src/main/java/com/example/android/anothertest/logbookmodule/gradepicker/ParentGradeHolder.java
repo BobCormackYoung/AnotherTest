@@ -1,34 +1,42 @@
-package com.example.android.anothertest;
+package com.example.android.anothertest.logbookmodule.gradepicker;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import com.example.android.anothertest.R;
+import com.example.android.anothertest.data.DatabaseContract;
+import com.example.android.anothertest.data.DatabaseHelper;
 
 /**
- * Created by Bobek on 01/02/2018.
+ * Created by Bobek on 11/02/2018.
  */
 
-public class ParentListHolder extends AppCompatActivity {
+public class ParentGradeHolder extends AppCompatActivity {
 
     private static final String TAG = "NestListHold_Tag";
     final int REQUEST_CODE_NUMBER = 3;
+    private int outputGradeName = 0;
+    private int outputGradeNumber = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parent_list);
 
-        final ArrayList<ListItem> parentListItems = new ArrayList<ListItem>();
-        parentListItems.add(new ListItem(1, "Test1"));
-        parentListItems.add(new ListItem(2, "Test2"));
-        parentListItems.add(new ListItem(3, "Test3"));
+        //Create handler to connect to SQLite DB
+        DatabaseHelper handler = new DatabaseHelper(this);
+        SQLiteDatabase database = handler.getWritableDatabase();
+        Cursor cursor = database.rawQuery("SELECT  * FROM " + DatabaseContract.GradeTypeEntry.TABLE_NAME, null);
 
-        ParentListAdapter parentAdapter = new ParentListAdapter(this, parentListItems);
+        ParentGradeAdapter parentAdapter = new ParentGradeAdapter(this, cursor);
 
         ListView parentListView = (ListView) findViewById(R.id.parent_listview);
 
@@ -38,14 +46,14 @@ public class ParentListHolder extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                ListItem parentListItem = parentListItems.get(position);
+                Log.i(TAG, Long.toString(id));
 
-                int output = parentListItem.getListItemID();
+                outputGradeName = (int) id;
 
                 // Create new intent
-                Intent selectorIntent = new Intent(ParentListHolder.this, ChildListHolder.class);
+                Intent selectorIntent = new Intent(ParentGradeHolder.this, ChildGradeHolder.class);
                 // Add extra information to intent so that subsequent activity knows that we're requesting to generate list of grades
-                selectorIntent.putExtra("selector", output);
+                selectorIntent.putExtra("selector", outputGradeName);
                 // Start activity for getting result
                 startActivityForResult(selectorIntent, REQUEST_CODE_NUMBER);
 
@@ -61,10 +69,11 @@ public class ParentListHolder extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 // The user picked a grade,
-                int output = data.getIntExtra("OutputData", 0);
+                outputGradeNumber = data.getIntExtra("OutputData", 0);
 
                 Intent outputIntent = new Intent();
-                outputIntent.putExtra("OutputData", output);
+                outputIntent.putExtra("OutputGradeNumber", outputGradeNumber);
+                outputIntent.putExtra("OutputGradeName", outputGradeName);
                 setResult(RESULT_OK, outputIntent);
                 finish();
 
@@ -73,3 +82,4 @@ public class ParentListHolder extends AppCompatActivity {
         }
     }
 }
+

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.logbookmodule.LogBook;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

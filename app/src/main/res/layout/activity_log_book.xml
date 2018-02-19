@@ -5,44 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.android.anothertest.LogBook">
+    tools:context="com.example.android.anothertest.logbookmodule.LogBook">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:background="#1c1c1c" />
+        android:scaleType="centerCrop" />
 
     <!--android:src="@drawable/background_matterhorn"-->
 
     <LinearLayout
+        android:id="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="4dp"
-        android:id="@+id/layout_header">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_previous_day"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_weight="0"
-            android:text="b"
             android:background="#902b27ba"
+            android:text="b"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textview_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="center"
             android:text="Today"
+            android:textAlignment="center"
+            android:textColor="#000000"
             android:textSize="18dp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/button_next_day"
@@ -50,45 +49,49 @@
             android:layout_height="40dp"
             android:layout_marginBottom="8dp"
             android:layout_weight="0"
-            android:text="f"
             android:background="#902b27ba"
+            android:text="f"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/layout_header"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/button_log_climb"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Log Climb"
             android:layout_alignParentBottom="true"
-            android:background="#902b27ba"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
             android:layout_marginTop="4dp"
+            android:text="Log Climb"
             android:textSize="16dp" />
+
+        <!--android:background="#902b27ba"-->
+        <!--android:textColor="#FFFFFF"-->
+        <!--android:textStyle="bold"-->
 
         <Button
             android:id="@+id/button_add_workout"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center"
-            android:text="Add Workout"
             android:layout_above="@id/button_log_climb"
-            android:background="#902b27ba"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
+            android:layout_gravity="center_horizontal|center"
             android:layout_marginTop="8dp"
+            android:text="Add Workout"
             android:textSize="16dp" />
+
+        <!--android:background="#902b27ba"-->
+        <!--android:textColor="#FFFFFF"-->
+        <!--android:textStyle="bold"-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -98,8 +101,8 @@
             <TextView
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:background="#FFFFFF"
-                android:layout_marginLeft="18dp"/>
+                android:layout_marginLeft="18dp"
+                android:background="#000000" />
 
             <ListView
                 android:id="@+id/log_book_list"

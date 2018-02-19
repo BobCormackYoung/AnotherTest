@@ -2,19 +2,19 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.android.anothertest.LogClimb"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    tools:context="com.example.android.anothertest.logbookmodule.AddClimb">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="16dp"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true">
+        android:paddingTop="16dp">
 
 
         <TextView
@@ -29,8 +29,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:background="@color/colorClimbingItems"/>
 
         <LinearLayout
@@ -41,8 +41,33 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Route Name"
                 android:paddingLeft="4dp"
+                android:text="Date"
+                android:textAppearance="?android:textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/editText5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:editable="false"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Date"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:text="Route Name"
                 android:textAppearance="?android:textAppearanceLarge"/>
 
             <EditText
@@ -50,8 +75,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Enter Route Name" />
+                android:hint="Enter Route Name"
+                android:inputType="textCapSentences" />
 
         </LinearLayout>
 
@@ -63,8 +88,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location Name"
                 android:paddingLeft="4dp"
+                android:text="Location Name"
                 android:textAppearance="?android:textAppearanceLarge"/>
 
             <EditText
@@ -72,8 +97,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Enter Location" />
+                android:hint="Enter Location"
+                android:inputType="textCapSentences" />
 
         </LinearLayout>
 
@@ -85,20 +110,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ascent Type"
                 android:paddingLeft="4dp"
+                android:text="Ascent Type"
                 android:textAppearance="?android:textAppearanceLarge"/>
 
             <EditText
                 android:id="@+id/editText3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Click to select"
-                android:editable="false"
                 android:clickable="true"
-                android:focusable="false"/>
+                android:editable="false"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Click to select"
+                android:inputType="textPersonName" />
 
         </LinearLayout>
 
@@ -110,20 +135,41 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Grade"
                 android:paddingLeft="4dp"
+                android:text="Grade"
                 android:textAppearance="?android:textAppearanceLarge"/>
 
             <EditText
                 android:id="@+id/editText4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="Click to select"
-                android:editable="false"
                 android:clickable="true"
-                android:focusable="false" />
+                android:editable="false"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Click to select"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:text="First Ascent"
+                android:textAppearance="?android:textAppearanceLarge" />
+
+            <CheckBox
+                android:id="@+id/checkbox_firstascent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:checked="false" />
 
         </LinearLayout>
 
@@ -133,18 +179,18 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/log_climb_save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Save"
-                android:id="@+id/log_climb_save" />
+                android:text="Save" />
 
             <Button
+                android:id="@+id/log_climb_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancel"
-                android:id="@+id/log_climb_cancel" />
+                android:text="Cancel" />
 
         </LinearLayout>
 

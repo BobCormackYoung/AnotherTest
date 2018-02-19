@@ -71,7 +71,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ClimbLogEntry.COLUMN_GRADECODE + " INTEGER, "
                 + ClimbLogEntry.COLUMN_ASCENTTYPECODE + " INTEGER, "
                 + ClimbLogEntry.COLUMN_LOCATION + " TEXT, "
-                + ClimbLogEntry.COLUMN_FIRSTASCENTCODE + " INTEGER);";
+                + ClimbLogEntry.COLUMN_FIRSTASCENTCODE + " INTEGER, "
+                + ClimbLogEntry.COLUMN_LOGTAG + " INTEGER);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_CLIMBLOG_TABLE);

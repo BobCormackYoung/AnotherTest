@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="88dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/log_book_list_item_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
     android:orientation="horizontal"
-    tools:background="#000000">
+    tools:background="#FFFFFF">
 
     <!--android:background="@color/colorLogBookListItemBkgd"-->
 
     <LinearLayout
+        android:id="@+id/layout_spot"
         android:layout_width="38dp"
-        android:layout_height="88dp"
-        android:id="@+id/layout_spot">
+        android:layout_height="88dp">
 
         <TextView
             android:layout_width="8dp"
             android:layout_height="8dp"
-            android:background="#FFFFFF"
             android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="40dp"
-            android:layout_marginRight="15dp"/>
+            android:background="#000000" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/log_book_list_item_icon_wrapper"
         android:layout_width="88dp"
         android:layout_height="88dp"
-        android:id="@+id/log_book_list_item_icon_wrapper"
         android:layout_toRightOf="@id/layout_spot">
 
         <TextView
@@ -35,9 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            tools:text="8a"
+            android:textColor="#000000"
             android:textSize="36sp"
-            android:textColor="#FFFFFF"/>
+            tools:text="8a" />
 
     </LinearLayout>
 
@@ -48,40 +48,40 @@
         android:layout_toRightOf="@id/log_book_list_item_icon_wrapper">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
             android:id="@+id/log_book_list_item_title"
-            android:textAppearance="?android:textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
             android:gravity="bottom"
-            tools:text="header"
-            android:textColor="#FFFFFF"/>
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="#000000"
+            tools:text="header" />
 
         <TextView
+            android:id="@+id/log_book_list_item_info1"
             android:layout_width="match_parent"
             android:layout_height="16dp"
             android:layout_below="@id/log_book_list_item_title"
-            android:id="@+id/log_book_list_item_info1"
-            tools:text="info1"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#000000"
+            tools:text="info1" />
 
         <TextView
+            android:id="@+id/log_book_list_item_info2"
             android:layout_width="match_parent"
             android:layout_height="16dp"
             android:layout_below="@id/log_book_list_item_info1"
-            android:id="@+id/log_book_list_item_info2"
-            tools:text="info2"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#000000"
+            tools:text="info2" />
 
         <TextView
+            android:id="@+id/log_book_list_item_info3"
             android:layout_width="match_parent"
             android:layout_height="16dp"
             android:layout_below="@id/log_book_list_item_info2"
-            android:id="@+id/log_book_list_item_info3"
-            tools:text="info3"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#000000"
+            tools:text="info3" />
 
     </RelativeLayout>
 
