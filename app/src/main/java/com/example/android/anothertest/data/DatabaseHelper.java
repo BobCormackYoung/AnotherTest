@@ -12,6 +12,8 @@ import com.example.android.anothertest.data.DatabaseContract.ClimbLogEntry;
 import com.example.android.anothertest.data.DatabaseContract.GradeListEntry;
 import com.example.android.anothertest.data.DatabaseContract.GradeTypeEntry;
 
+import java.util.Calendar;
+
 /**
  * Created by Bobek on 22/01/2018.
  */
@@ -104,6 +106,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         insertInitialGradeTypeData(db);
 
         insertInitialAscentTypeData(db);
+
+        insertDummyClimbs(db);
 
     }
 
@@ -1736,6 +1740,262 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(AscentEntry.COLUMN_DESCRIPTION, "Redpointing a route means free-climbing it by leading, after having practiced the route beforehand.");
         db.insert(AscentEntry.TABLE_NAME, null, values);
 
+
+
+    }
+
+    public void insertDummyClimbs(SQLiteDatabase db) {
+
+
+        long currentDate = Calendar.getInstance().getTimeInMillis();
+        long dayTwoDate = currentDate + 86400000;
+        long dayThreeDate = currentDate + 86400000 * 2;
+        long dayFourDate = currentDate - 86400000;
+        long dayFiveDate = currentDate - 86400000 * 2;
+
+        ContentValues values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        //day+1
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1+1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1+1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2+1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2+1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3+1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3+1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4+1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4+1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        //day+2
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1+2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1+2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2+2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2+2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3+2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3+2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4+2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4+2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        //day-1
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1-1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1-1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2-1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2-1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3-1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3-1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4-1");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4-1");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        //day-2
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1-2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1-2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2-2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2-2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3-2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3-2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
+        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4-2");
+        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4-2");
+        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
+        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.clear();
 
 
     }
