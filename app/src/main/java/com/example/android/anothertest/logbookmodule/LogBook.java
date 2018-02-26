@@ -17,6 +17,8 @@ import com.example.android.anothertest.R;
 import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
 
+import java.util.Calendar;
+
 public class LogBook extends AppCompatActivity {
 
     final int ADD_CLIMB_NEW = 0;
@@ -24,16 +26,24 @@ public class LogBook extends AppCompatActivity {
     DatabaseHelper handler;
     SQLiteDatabase database;
     LogBookListAdapter adapter;
+    long dayPeriod = 86400000;
+    long currentDateStart;
+    long currentDateEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_book);
 
+        long currentDate = Calendar.getInstance().getTimeInMillis();
+        currentDateStart = currentDate - millisToStartOfDay();
+        currentDateEnd = currentDateStart + dayPeriod;
+
         //Create handler to connect to SQLite DB
         handler = new DatabaseHelper(this);
         database = handler.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT  * FROM " + DatabaseContract.ClimbLogEntry.TABLE_NAME, null);
+        //Cursor cursor = database.rawQuery("SELECT  * FROM " + DatabaseContract.ClimbLogEntry.TABLE_NAME, null);
+        Cursor cursor = getCursorBetweenDates(currentDateStart, currentDateEnd, database);
 
         adapter = new LogBookListAdapter(this, cursor);
         ListView listView = (ListView) findViewById(R.id.log_book_list);
@@ -122,7 +132,8 @@ public class LogBook extends AppCompatActivity {
     }
 
     public void refreshCursor() {
-        Cursor cursorNew = database.rawQuery("SELECT  * FROM " + DatabaseContract.ClimbLogEntry.TABLE_NAME, null);
+        //Cursor cursorNew = database.rawQuery("SELECT  * FROM " + DatabaseContract.ClimbLogEntry.TABLE_NAME, null);
+        Cursor cursorNew = getCursorBetweenDates(currentDateStart, currentDateEnd, database);
         adapter.changeCursor(cursorNew);
     }
 
@@ -156,6 +167,46 @@ public class LogBook extends AppCompatActivity {
 
         return (alert);
 
+    }
+
+    public Cursor getCursorBetweenDates(long dateStart, long dateEnd, SQLiteDatabase db) {
+
+        Log.d("getCursorBetweenDates", "dateStart = " + dateStart + " , dateEnd = " + dateEnd);
+/*        String[] projection = {
+                DatabaseContract.ClimbLogEntry._ID,
+                DatabaseContract.ClimbLogEntry.COLUMN_DATE,
+                DatabaseContract.ClimbLogEntry.COLUMN_NAME,
+                DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE,
+                DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE,
+                DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE,
+                DatabaseContract.ClimbLogEntry.COLUMN_LOCATION,
+                DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE,
+                DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG};
+        String whereClause = DatabaseContract.ClimbLogEntry.COLUMN_DATE + " BETWEEN ? AND ?";
+        String[] whereValue = {String.valueOf(dateStart),
+                String.valueOf(dateEnd)};
+
+        Cursor cursor = db.query(DatabaseContract.ClimbLogEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);*/
+
+        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.ClimbLogEntry.TABLE_NAME + " where " + DatabaseContract.ClimbLogEntry.COLUMN_DATE + " BETWEEN '" + dateStart + "' AND '" + dateEnd + "' ORDER BY Date ASC", null);
+
+        return cursor;
+    }
+
+    public long millisToStartOfDay() {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        long millis = (System.currentTimeMillis() - c.getTimeInMillis());
+        return millis;
     }
 
 }
