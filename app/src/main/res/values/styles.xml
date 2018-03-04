@@ -20,4 +20,40 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="AdderHeaderStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+    </style>
+
+    <style name="EditTextNonFocusableNonEditableClickable">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:editable">false</item>
+        <item name="android:ems">10</item>
+        <item name="android:focusable">false</item>
+        <item name="android:inputType">textPersonName</item>
+    </style>
+
+    <style name="EditTextNonFocusableNonEditableNonClickable">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">false</item>
+        <item name="android:editable">false</item>
+        <item name="android:ems">10</item>
+        <item name="android:focusable">false</item>
+        <item name="android:inputType">textPersonName</item>
+    </style>
+
+    <style name="EditTextFocusableEditableNonClickable">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">false</item>
+        <item name="android:editable">true</item>
+        <item name="android:ems">10</item>
+        <item name="android:focusable">true</item>
+        <item name="android:inputType">textCapSentences</item>
+    </style>
+
 </resources>

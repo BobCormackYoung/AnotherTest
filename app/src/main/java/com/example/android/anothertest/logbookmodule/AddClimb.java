@@ -2,7 +2,6 @@ package com.example.android.anothertest.logbookmodule;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +16,9 @@ import android.widget.Toast;
 import com.example.android.anothertest.R;
 import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 import com.example.android.anothertest.logbookmodule.ascentpicker.AscentHolder;
 import com.example.android.anothertest.logbookmodule.gradepicker.ParentGradeHolder;
-
-import java.util.Calendar;
 
 /**
  * Created by Bobek on 11/02/2018.
@@ -39,6 +37,7 @@ public class AddClimb extends AppCompatActivity {
     int outputAscent = -1;
     String outputLocationName = null;
     String outputRouteName = null;
+    String outputDateString = null;
     int outputFirstAscent = -1;
     long outputDate = -1;
     int inputIntentCode = -1;
@@ -56,156 +55,56 @@ public class AddClimb extends AppCompatActivity {
         Intent inputIntent = getIntent();
         inputIntentCode = inputIntent.getIntExtra("EditOrNewFlag", 0);
         inputRowID = inputIntent.getIntExtra("RowID", 0);
+        outputDate = inputIntent.getLongExtra("Date", 0);
 
         if (inputIntentCode == ADD_CLIMB_NEW) {
             // Add a new climb, don't import any data to the form
-            outputDate = Calendar.getInstance().getTimeInMillis();
-            String outputDateString = convertDate(outputDate, "dd/MM/yyyy");
+            //outputDate = Calendar.getInstance().getTimeInMillis();
+            String outputDateString = convertDate(outputDate, "yyyy-MM-dd");
             EditText dateView = (EditText) findViewById(R.id.editText5);
             dateView.setText(outputDateString);
 
         } else if (inputIntentCode == ADD_CLIMB_EDIT) {
             // Edit existing record, import data into the form
-            DatabaseHelper handler = new DatabaseHelper(this);
-            SQLiteDatabase database = handler.getWritableDatabase();
 
-            String[] projection = {
-                    DatabaseContract.ClimbLogEntry._ID,
-                    DatabaseContract.ClimbLogEntry.COLUMN_DATE,
-                    DatabaseContract.ClimbLogEntry.COLUMN_NAME,
-                    DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE,
-                    DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE,
-                    DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE,
-                    DatabaseContract.ClimbLogEntry.COLUMN_LOCATION,
-                    DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE,
-                    DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG};
-            String whereClause = DatabaseContract.ClimbLogEntry._ID + "=?";
-            String[] whereValue = {String.valueOf(inputRowID)};
+            // Load climb log data for a specific row ID
+            Bundle bundle = DatabaseReadWrite.EditClimbLoadEntry(inputRowID, this);
 
-            Cursor cursor = database.query(DatabaseContract.ClimbLogEntry.TABLE_NAME,
-                    projection,
-                    whereClause,
-                    whereValue,
-                    null,
-                    null,
-                    null);
-
-            cursor.moveToFirst();
-
-            // Get and set route name
-            int idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_NAME);
-            outputRouteName = cursor.getString(idColumnOutput);
             EditText routeNameView = (EditText) findViewById(R.id.editText);
+            outputRouteName = bundle.getString("outputRouteName");
             routeNameView.setText(outputRouteName);
 
-            // Get and set  location name
-            idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_NAME);
-            outputLocationName = cursor.getString(idColumnOutput);
             EditText locationNameView = (EditText) findViewById(R.id.editText2);
+            outputLocationName = bundle.getString("outputLocationName");
             locationNameView.setText(outputLocationName);
 
-            // Get date
-            idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_DATE);
-            outputDate = (long) cursor.getLong(idColumnOutput);
-            String outputDateString = convertDate(outputDate, "dd/MM/yyyy");
             EditText dateView = (EditText) findViewById(R.id.editText5);
-            dateView.setText(String.valueOf(outputDateString));
+            outputDate = bundle.getLong("outputDate");
+            outputDateString = bundle.getString("outputDateString");
+            dateView.setText(outputDateString);
 
-            // Get whether first ascent or not
-            idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE);
-            outputFirstAscent = cursor.getInt(idColumnOutput);
             CheckBox firstAscentCheckBox = (CheckBox) findViewById(R.id.checkbox_firstascent);
+            outputFirstAscent = bundle.getInt("outputFirstAscent");
             if (outputFirstAscent == DatabaseContract.ClimbLogEntry.FIRSTASCENT_TRUE) {
                 firstAscentCheckBox.setChecked(true);
             } else if (outputFirstAscent == DatabaseContract.ClimbLogEntry.FIRSTASCENT_FALSE) {
                 firstAscentCheckBox.setChecked(false);
             }
-
-            // Get grade
-            idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE);
-            outputGradeNumber = cursor.getInt(idColumnOutput);
-            idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE);
-            outputGradeName = cursor.getInt(idColumnOutput);
-
-            // Get ascent type
-            idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE);
-            outputAscent = cursor.getInt(idColumnOutput);
-
-            cursor.close();
+            outputGradeNumber = bundle.getInt("outputGradeNumber");
+            outputGradeName = bundle.getInt("outputGradeName");
+            outputAscent = bundle.getInt("outputAscent");
 
             // Set grade view
             // Get grade name
-            String[] projectionTwo = {
-                    DatabaseContract.GradeListEntry._ID,
-                    DatabaseContract.GradeListEntry.COLUMN_GRADENAME};
-            String whereClauseTwo = DatabaseContract.GradeListEntry._ID + "=?";
-            String[] whereValueTwo = {String.valueOf(outputGradeNumber)};
-
-            Cursor cursorTwo = database.query(DatabaseContract.GradeListEntry.TABLE_NAME,
-                    projectionTwo,
-                    whereClauseTwo,
-                    whereValueTwo,
-                    null,
-                    null,
-                    null);
-
-            cursorTwo.moveToFirst();
-
-            idColumnOutput = cursorTwo.getColumnIndex(DatabaseContract.GradeListEntry.COLUMN_GRADENAME);
-            String outputStringTwo = cursorTwo.getString(idColumnOutput);
-
-            cursorTwo.close();
-
-            String[] projectionThree = {
-                    DatabaseContract.GradeTypeEntry._ID,
-                    DatabaseContract.GradeTypeEntry.COLUMN_GRADETYPENAME};
-            String whereClauseThree = DatabaseContract.GradeTypeEntry._ID + "=?";
-            String[] whereValueThree = {String.valueOf(outputGradeName)};
-
-            Cursor cursorThree = database.query(DatabaseContract.GradeTypeEntry.TABLE_NAME,
-                    projectionThree,
-                    whereClauseThree,
-                    whereValueThree,
-                    null,
-                    null,
-                    null);
-
-            cursorThree.moveToFirst();
-
-            idColumnOutput = cursorThree.getColumnIndex(DatabaseContract.GradeTypeEntry.COLUMN_GRADETYPENAME);
-            String outputStringThree = cursorThree.getString(idColumnOutput);
-
-            cursorThree.close();
-
+            String outputStringGradeName = DatabaseReadWrite.getGradeTextClimb(outputGradeNumber, this);
+            String outputStringGradeType = DatabaseReadWrite.getGradeTypeClimb(outputGradeName, this);
             EditText gradeView = (EditText) findViewById(R.id.editText4);
-            gradeView.setText(outputStringThree + " | " + outputStringTwo);
+            gradeView.setText(outputStringGradeType + " | " + outputStringGradeName);
 
             // Set ascent type
-            String[] projectionFour = {
-                    DatabaseContract.AscentEntry._ID,
-                    DatabaseContract.AscentEntry.COLUMN_ASCENTTYPENAME,
-                    DatabaseContract.AscentEntry.COLUMN_DESCRIPTION};
-            String whereClauseFour = DatabaseContract.AscentEntry._ID + "=?";
-            String[] whereValueFour = {String.valueOf(outputAscent)};
-
-            Cursor cursorFour = database.query(DatabaseContract.AscentEntry.TABLE_NAME,
-                    projectionFour,
-                    whereClauseFour,
-                    whereValueFour,
-                    null,
-                    null,
-                    null);
-
-            idColumnOutput = cursorFour.getColumnIndex(DatabaseContract.AscentEntry.COLUMN_ASCENTTYPENAME);
-
-            cursorFour.moveToFirst();
-            String outputStringFour = cursorFour.getString(idColumnOutput);
-
+            String outputStringAscentType = DatabaseReadWrite.getAscentNameTextClimb(outputAscent, this);
             EditText ascentTypeView = (EditText) findViewById(R.id.editText3);
-            ascentTypeView.setText(outputStringFour);
-
-            cursorFour.close();
-
+            ascentTypeView.setText(outputStringAscentType);
         }
 
 
@@ -315,118 +214,24 @@ public class AddClimb extends AppCompatActivity {
     private void putGrade(Intent data) {
         // The user picked a grade, get the grade number
         outputGradeNumber = data.getIntExtra("OutputGradeNumber", 0);
-
-        Log.i(LOG_TAG, String.valueOf(outputGradeNumber));
-
-        //Create handler to connect to SQLite DB
-        DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-
-        String[] projection = {
-                DatabaseContract.GradeListEntry._ID,
-                DatabaseContract.GradeListEntry.COLUMN_GRADENAME};
-        String whereClause = DatabaseContract.GradeListEntry._ID + "=?";
-        String[] whereValue = {String.valueOf(outputGradeNumber)};
-
-        Cursor cursor = database.query(DatabaseContract.GradeListEntry.TABLE_NAME,
-                projection,
-                whereClause,
-                whereValue,
-                null,
-                null,
-                null);
-
-        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.GradeListEntry.COLUMN_GRADENAME);
-
-        Log.i(LOG_TAG, "column index = " + idColumnOutput);
-
-        while (cursor.moveToNext()) {
-            String outputString = cursor.getString(idColumnOutput);
-            Log.i(LOG_TAG, outputString);
-
-            EditText gradeView = (EditText) findViewById(R.id.editText4);
-            gradeView.setText(outputString);
-        }
-
-        cursor.close();
+        String outputStringGradeName = DatabaseReadWrite.getGradeTextClimb(outputGradeNumber, this);
 
         // The user picked a grade, get the grade number
+        // Put grade text date in the view
         outputGradeName = data.getIntExtra("OutputGradeName", 0);
-
-        Log.i(LOG_TAG, String.valueOf(outputGradeName));
-
-        //Create handler to connect to SQLite DB
-        DatabaseHelper handler1 = new DatabaseHelper(this);
-        SQLiteDatabase database1 = handler.getWritableDatabase();
-
-        String[] projection1 = {
-                DatabaseContract.GradeTypeEntry._ID,
-                DatabaseContract.GradeTypeEntry.COLUMN_GRADETYPENAME};
-        String whereClause1 = DatabaseContract.GradeTypeEntry._ID + "=?";
-        String[] whereValue1 = {String.valueOf(outputGradeName)};
-
-        Cursor cursor1 = database.query(DatabaseContract.GradeTypeEntry.TABLE_NAME,
-                projection1,
-                whereClause1,
-                whereValue1,
-                null,
-                null,
-                null);
-
-        int idColumnOutput1 = cursor1.getColumnIndex(DatabaseContract.GradeTypeEntry.COLUMN_GRADETYPENAME);
-
-        Log.i(LOG_TAG, "column index = " + idColumnOutput1);
-
-        while (cursor1.moveToNext()) {
-            String outputString1 = cursor1.getString(idColumnOutput1);
-            Log.i(LOG_TAG, outputString1);
-
-            EditText gradeView = (EditText) findViewById(R.id.editText4);
-            String existingText = String.valueOf(gradeView.getText());
-            gradeView.setText(outputString1 + " | " + existingText);
-        }
-
-        cursor1.close();
+        String outputStringGradeType = DatabaseReadWrite.getGradeTypeClimb(outputGradeName, this);
+        EditText gradeView = (EditText) findViewById(R.id.editText4);
+        gradeView.setText(outputStringGradeType + " | " + outputStringGradeName);
     }
 
     // method for inserting the ascent data into the method variables & insert into textviews
     private void putAscent(Intent data) {
         outputAscent = data.getIntExtra("OutputData", 0);
 
-        Log.i(LOG_TAG, String.valueOf(outputAscent));
-
         //Create handler to connect to SQLite DB
-        DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-
-        String[] projection = {
-                DatabaseContract.AscentEntry._ID,
-                DatabaseContract.AscentEntry.COLUMN_ASCENTTYPENAME,
-                DatabaseContract.AscentEntry.COLUMN_DESCRIPTION};
-        String whereClause = DatabaseContract.AscentEntry._ID + "=?";
-        String[] whereValue = {String.valueOf(outputAscent)};
-
-        Cursor cursor = database.query(DatabaseContract.AscentEntry.TABLE_NAME,
-                projection,
-                whereClause,
-                whereValue,
-                null,
-                null,
-                null);
-
-        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.AscentEntry.COLUMN_ASCENTTYPENAME);
-
-        Log.i(LOG_TAG, "column index = " + idColumnOutput);
-
-        while (cursor.moveToNext()) {
-            String outputString = cursor.getString(idColumnOutput);
-            Log.i(LOG_TAG, outputString);
-
-            EditText gradeView = (EditText) findViewById(R.id.editText3);
-            gradeView.setText(outputString);
-        }
-
-        cursor.close();
+        String outputStringAscentType = DatabaseReadWrite.getAscentNameTextClimb(outputAscent, this);
+        EditText gradeView = (EditText) findViewById(R.id.editText3);
+        gradeView.setText(outputStringAscentType);
     }
 
     private void findGrade() {
@@ -456,6 +261,7 @@ public class AddClimb extends AppCompatActivity {
         values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG, DatabaseContract.ClimbLogEntry.LOGTAG_CLIMB);
 
         long newRowId = database.insert(DatabaseContract.ClimbLogEntry.TABLE_NAME, null, values);
+        database.close();
         return newRowId;
     }
 
@@ -481,6 +287,7 @@ public class AddClimb extends AppCompatActivity {
         String[] whereValueFive = {String.valueOf(rowID)};
 
         long newRowId = database.update(DatabaseContract.ClimbLogEntry.TABLE_NAME, values, whereClauseFive, whereValueFive);
+        database.close();
         return newRowId;
     }
 }

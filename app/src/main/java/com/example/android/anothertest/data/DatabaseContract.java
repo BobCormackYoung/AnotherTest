@@ -21,7 +21,6 @@ public final class DatabaseContract {
 
     }
 
-
     public final static class CalendarTrackerEntry implements BaseColumns{
 
         public final static String TABLE_NAME = "CalendarTracker";
@@ -72,5 +71,58 @@ public final class DatabaseContract {
 
     }
 
+    public final static class WorkoutLogEntry implements BaseColumns {
+
+        public final static String TABLE_NAME = "WorkoutLog";
+
+        public final static String _ID = BaseColumns._ID;
+        public final static String COLUMN_DATE = "Date";
+        public final static String COLUMN_WORKOUTTYPECODE = "WorkoutTypeCode";
+        public final static String COLUMN_WORKOUTCODE = "WorkoutCode";
+        public final static String COLUMN_ISCLIMB = "IsClimbCode";
+        public final static String COLUMN_WEIGHT = "Weight";
+        public final static String COLUMN_SETCOUNT = "SetCount";
+        public final static String COLUMN_REPCOUNTPERSET = "RepCountPerSet";
+        public final static String COLUMN_REPDURATIONPERSET = "RepDurationPerSet";
+        public final static String COLUMN_RESTDURATIONPERSET = "RestDurationPerSet";
+        public final static String COLUMN_GRADETYPECODE = "GradeTypeCode";
+        public final static String COLUMN_GRADECODE = "GradeCode";
+        public final static String COLUMN_ISCOMPLETE = "IsComplete";
+
+        public final static int IS_TRUE = 1;
+        public final static int IS_FALSE = 0;
+
+    }
+
+    public final static class WorkoutListEntry implements BaseColumns {
+
+        public final static String TABLE_NAME = "WorkoutList";
+
+        public final static String _ID = BaseColumns._ID;
+        public final static String COLUMN_NAME = "Name";
+        public final static String COLUMN_WORKOUTTYPECODE = "WorkoutTypeCode";
+        public final static String COLUMN_DESCRIPTION = "Description";
+        public final static String COLUMN_ISCLIMB = "IsClimbCode";
+        public final static String COLUMN_ISWEIGHT = "IsWeight";
+        public final static String COLUMN_ISSETCOUNT = "IsSetCount";
+        public final static String COLUMN_ISREPCOUNTPERSET = "IsRepCountPerSet";
+        public final static String COLUMN_ISREPDURATIONPERSET = "IsRepDurationPerSet";
+        public final static String COLUMN_ISRESTDURATIONPERSET = "IsRestDurationPerSet";
+        public final static String COLUMN_ISGRADECODE = "IsGradeCode";
+
+        public final static int IS_TRUE = 1;
+        public final static int IS_FALSE = 0;
+
+    }
+
+    public final static class WorkoutTypeEntry implements BaseColumns {
+
+        public final static String TABLE_NAME = "WorkoutType";
+
+        public final static String _ID = BaseColumns._ID;
+        public final static String COLUMN_WORKOUTTYPENAME = "Name";
+        public final static String COLUMN_DESCRIPTION = "Description";
+
+    }
 
 }

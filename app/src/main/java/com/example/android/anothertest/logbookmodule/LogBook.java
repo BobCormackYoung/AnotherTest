@@ -1,106 +1,95 @@
 package com.example.android.anothertest.logbookmodule;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.android.anothertest.R;
-import com.example.android.anothertest.data.DatabaseContract;
-import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.util.TimeUtils;
 
 import java.util.Calendar;
 
-public class LogBook extends AppCompatActivity {
+public class LogBook extends FragmentActivity {
 
+    private static Context mContext;
     final int ADD_CLIMB_NEW = 0;
     final int ADD_CLIMB_EDIT = 1;
-    DatabaseHelper handler;
-    SQLiteDatabase database;
-    LogBookListAdapter adapter;
-    long dayPeriod = 86400000;
-    long currentDateStart;
-    long currentDateEnd;
+    private CachingFragmentStatePagerAdapter adapterViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_book);
 
-        long currentDate = Calendar.getInstance().getTimeInMillis();
-        currentDateStart = currentDate - millisToStartOfDay();
-        currentDateEnd = currentDateStart + dayPeriod;
+        mContext = this;
 
-        //Create handler to connect to SQLite DB
-        handler = new DatabaseHelper(this);
-        database = handler.getWritableDatabase();
-        //Cursor cursor = database.rawQuery("SELECT  * FROM " + DatabaseContract.ClimbLogEntry.TABLE_NAME, null);
-        Cursor cursor = getCursorBetweenDates(currentDateStart, currentDateEnd, database);
+        // Set header date to current date
+        long outputDate = Calendar.getInstance().getTimeInMillis();
+        TextView header = findViewById(R.id.textview_date);
+        header.setText(TimeUtils.convertDate(outputDate, "yyyy-MM-dd"));
 
-        adapter = new LogBookListAdapter(this, cursor);
-        ListView listView = (ListView) findViewById(R.id.log_book_list);
-        listView.setAdapter(adapter);
+        // Initialise viewPager
+        final ViewPager vpPager = (ViewPager) findViewById(R.id.log_book_viewpager);
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(adapterViewPager);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Set pager to current date
+        vpPager.setCurrentItem(TimeUtils.getPositionForDay(Calendar.getInstance()));
+
+        // Set PageChangeListener
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // Create a new intent to open the {@link FamilyActivity}
-                Intent editClimbIntent = new Intent(LogBook.this, AddClimb.class);
-                editClimbIntent.putExtra("EditOrNewFlag", ADD_CLIMB_EDIT);
-                editClimbIntent.putExtra("RowID", (int) id);
-                // Start the new activity
-                Log.i("TAG ME UP", "OnItemClick " + (int) id + " " + String.valueOf(ADD_CLIMB_EDIT));
-                startActivity(editClimbIntent);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            // When new page is selected, udpate the header to match the new date
+            @Override
+            public void onPageSelected(int position) {
+                Calendar cal = TimeUtils.getDayForPosition(position);
+                TextView header = findViewById(R.id.textview_date);
+                header.setText(TimeUtils.getFormattedDate(mContext, cal.getTimeInMillis()));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-
-                AlertDialog.Builder deleteAlert = deleteDialog(id);
-
-                deleteAlert.show();
-
-                return true;
-            }
-        });
-
-        //TODO: way for scrolling between days
-
+        // Find all button views
         View button_previous_day = findViewById(R.id.button_previous_day);
         View button_next_day = findViewById(R.id.button_next_day);
         View button_add_workout = findViewById(R.id.button_add_workout);
         View button_log_climb = findViewById(R.id.button_log_climb);
 
+        // Previous Day Button
         button_previous_day.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create a new intent to open the {@link FamilyActivity}
-                // ...Intent TrainingLogIntent = new Intent(LogBook.this, LogBook.class);
-                // Start the new activity
-                // ...startActivity(TrainingLogIntent);
+                int position = vpPager.getCurrentItem();
+                int newPosition = position - 1;
+                vpPager.setCurrentItem(newPosition, true);
             }
         });
 
+        // Next Day Button
         button_next_day.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create a new intent to open the {@link FamilyActivity}
-                // ...Intent TrainingLogIntent = new Intent(LogBook.this, LogBook.class);
-                // Start the new activity
-                // ...startActivity(TrainingLogIntent);
+                int position = vpPager.getCurrentItem();
+                int newPosition = position + 1;
+                vpPager.setCurrentItem(newPosition, true);
             }
         });
 
+        // Add Workout Button
         button_add_workout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,13 +100,26 @@ public class LogBook extends AppCompatActivity {
             }
         });
 
+        // Add Climb Button
         button_log_climb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create a new intent to open the {@link FamilyActivity}
+                // Get the currently displayed page position
+                // Get it's calendar instance (date)
+                // Convert date to milliseconds
+                int position = vpPager.getCurrentItem();
+                Calendar cal = TimeUtils.getDayForPosition(position);
+                long date = cal.getTimeInMillis();
+
+                // Create intent to launch new activity
+                // Attach extras which will:
+                // 1) we're adding a new climb
+                // 2) negative rowID as we're not reading in any database rows
+                // 3) the date we're creating a record for (i.e. the date of the displayed page)
                 Intent AddClimbIntent = new Intent(LogBook.this, AddClimb.class);
                 AddClimbIntent.putExtra("EditOrNewFlag", ADD_CLIMB_NEW);
                 AddClimbIntent.putExtra("RowID", -1);
+                AddClimbIntent.putExtra("Date", date);
                 // Start the new activity
                 startActivity(AddClimbIntent);
             }
@@ -125,88 +127,33 @@ public class LogBook extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshCursor();
-    }
+    // Pager Adapter
+    public static class MyPagerAdapter extends CachingFragmentStatePagerAdapter {
 
-    public void refreshCursor() {
-        //Cursor cursorNew = database.rawQuery("SELECT  * FROM " + DatabaseContract.ClimbLogEntry.TABLE_NAME, null);
-        Cursor cursorNew = getCursorBetweenDates(currentDateStart, currentDateEnd, database);
-        adapter.changeCursor(cursorNew);
-    }
+        private Calendar cal;
 
-    public AlertDialog.Builder deleteDialog(final long id) {
+        public MyPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(LogBook.this);
-        //alert.setTitle("Alert!!");
-        alert.setMessage("Are you sure you wish to delete this ");
-        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String table = DatabaseContract.ClimbLogEntry.TABLE_NAME;
-                String whereClause = "_id=?";
-                String[] whereArgs = new String[]{String.valueOf(id)};
-                database.delete(table, whereClause, whereArgs);
+        @Override
+        public int getCount() {
+            return TimeUtils.DAYS_OF_TIME;
+        }
 
-                Toast.makeText(LogBook.this, "Clicked Yes, deleting " + id, Toast.LENGTH_LONG).show();
+        @Override
+        public Fragment getItem(int position) {
+            long timeForPosition = TimeUtils.getDayForPosition(position).getTimeInMillis();
+            return LogBookFragmentContent.newInstance(timeForPosition);
+        }
 
-                refreshCursor();
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Calendar cal = TimeUtils.getDayForPosition(position);
+            return TimeUtils.getFormattedDate(mContext, cal.getTimeInMillis());
+        }
 
-                dialog.dismiss();
-            }
-        });
-        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(LogBook.this, "Clicked No", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        });
 
-        return (alert);
-
-    }
-
-    public Cursor getCursorBetweenDates(long dateStart, long dateEnd, SQLiteDatabase db) {
-
-        Log.d("getCursorBetweenDates", "dateStart = " + dateStart + " , dateEnd = " + dateEnd);
-/*        String[] projection = {
-                DatabaseContract.ClimbLogEntry._ID,
-                DatabaseContract.ClimbLogEntry.COLUMN_DATE,
-                DatabaseContract.ClimbLogEntry.COLUMN_NAME,
-                DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE,
-                DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE,
-                DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE,
-                DatabaseContract.ClimbLogEntry.COLUMN_LOCATION,
-                DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE,
-                DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG};
-        String whereClause = DatabaseContract.ClimbLogEntry.COLUMN_DATE + " BETWEEN ? AND ?";
-        String[] whereValue = {String.valueOf(dateStart),
-                String.valueOf(dateEnd)};
-
-        Cursor cursor = db.query(DatabaseContract.ClimbLogEntry.TABLE_NAME,
-                projection,
-                whereClause,
-                whereValue,
-                null,
-                null,
-                null);*/
-
-        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.ClimbLogEntry.TABLE_NAME + " where " + DatabaseContract.ClimbLogEntry.COLUMN_DATE + " BETWEEN '" + dateStart + "' AND '" + dateEnd + "' ORDER BY Date ASC", null);
-
-        return cursor;
-    }
-
-    public long millisToStartOfDay() {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long millis = (System.currentTimeMillis() - c.getTimeInMillis());
-        return millis;
     }
 
 }

@@ -11,6 +11,9 @@ import com.example.android.anothertest.data.DatabaseContract.CalendarTrackerEntr
 import com.example.android.anothertest.data.DatabaseContract.ClimbLogEntry;
 import com.example.android.anothertest.data.DatabaseContract.GradeListEntry;
 import com.example.android.anothertest.data.DatabaseContract.GradeTypeEntry;
+import com.example.android.anothertest.data.DatabaseContract.WorkoutListEntry;
+import com.example.android.anothertest.data.DatabaseContract.WorkoutLogEntry;
+import com.example.android.anothertest.data.DatabaseContract.WorkoutTypeEntry;
 
 import java.util.Calendar;
 
@@ -97,9 +100,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_GRADETYPE_TABLE);
 
-        Log.v(LOG_TAG, "Database Creation Method Run");
+        // Create a String that contains the SQL statement to create the climb log table
+        String SQL_CREATE_WORKOUTLOG_TABLE = "CREATE TABLE " + WorkoutLogEntry.TABLE_NAME + " ("
+                + WorkoutLogEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "
+                + WorkoutLogEntry.COLUMN_DATE + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_WORKOUTTYPECODE + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_WORKOUTCODE + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_ISCLIMB + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_WEIGHT + " LONG, "
+                + WorkoutLogEntry.COLUMN_SETCOUNT + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_REPCOUNTPERSET + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_REPDURATIONPERSET + " LONG, "
+                + WorkoutLogEntry.COLUMN_RESTDURATIONPERSET + " LONG, "
+                + WorkoutLogEntry.COLUMN_GRADETYPECODE + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_GRADECODE + " INTEGER);";
 
-        Log.v(LOG_TAG, "Database Initial Fill Method Run");
+        // Execute the SQL statement
+        db.execSQL(SQL_CREATE_WORKOUTLOG_TABLE);
+
+        // Create a String that contains the SQL statement to create the climb log table
+        String SQL_CREATE_WORKOUTLIST_TABLE = "CREATE TABLE " + WorkoutListEntry.TABLE_NAME + " ("
+                + WorkoutListEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "
+                + WorkoutListEntry.COLUMN_NAME + " TEXT, "
+                + WorkoutListEntry.COLUMN_WORKOUTTYPECODE + " INTEGER, "
+                + WorkoutListEntry.COLUMN_DESCRIPTION + " TEXT, "
+                + WorkoutListEntry.COLUMN_ISCLIMB + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISWEIGHT + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISSETCOUNT + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISREPCOUNTPERSET + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISREPDURATIONPERSET + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISGRADECODE + " INTEGER);";
+
+        // Execute the SQL statement
+        db.execSQL(SQL_CREATE_WORKOUTLIST_TABLE);
+
+        // Create a String that contains the SQL statement to create the climb log table
+        String SQL_CREATE_WORKOUTTYPE_TABLE = "CREATE TABLE " + WorkoutTypeEntry.TABLE_NAME + " ("
+                + WorkoutTypeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "
+                + WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME + " TEXT, "
+                + WorkoutTypeEntry.COLUMN_DESCRIPTION + " TEXT);";
+
+        // Execute the SQL statement
+        db.execSQL(SQL_CREATE_WORKOUTTYPE_TABLE);
+
+        Log.v(LOG_TAG, "Database Creation Method Run");
 
         insertInitialGradeListData(db);
 
@@ -107,7 +152,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         insertInitialAscentTypeData(db);
 
+        insertInitialWorkoutTypeData(db);
+
+        insertInitialWorkoutListData(db);
+
+        Log.v(LOG_TAG, "Database Initial Fill Method Run");
+
         insertDummyClimbs(db);
+
+        Log.v(LOG_TAG, "Database Dummy Fill Method Run");
 
     }
 
@@ -1650,44 +1703,136 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, 38.5);
         db.insert(GradeListEntry.TABLE_NAME, null, values);
 
+        double maxSubjectiveDifficulty = 38.5;
+        double minSubjectiveDifficulty = 1;
+        double numberSubjectiveGrades = 10;
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Very Easy");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Easy");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (1 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Easy/Medium");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (2 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Medium");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (3 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Medium/Difficult");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (4 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Difficult");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (5 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Very Difficult");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (6 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Extreme");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (7 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Very Extreme");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, (8 * ((maxSubjectiveDifficulty - minSubjectiveDifficulty) / 9)) + minSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 9);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "Impossible unless Adam Ondra");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, maxSubjectiveDifficulty);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
 
         Log.v(LOG_TAG, "Database Initial Fill Method Run");
     }
 
     public void insertInitialGradeTypeData(SQLiteDatabase db) {
 
+        //1
         ContentValues values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "French (Boulder)");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
 
+        //2
         values.clear();
         values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "British (Boulder)");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
-        
+
+        //3
         values.clear();
         values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "V Grade (Boulder)");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
-        
+
+        //4
         values.clear();
         values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "French (Lead)");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
-        
+
+        //5
         values.clear();
         values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "British Trad (Lead)");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
-        
+
+        //6
         values.clear();
         values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "UIAA (Lead)");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
-        
+
+        //7
         values.clear();
         values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "Yosemite Decimal (Lead)");
+        db.insert(GradeTypeEntry.TABLE_NAME, null, values);
+
+        //8
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "Norwegian");
+        db.insert(GradeTypeEntry.TABLE_NAME, null, values);
+
+        //9
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "Subjective Grade");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
 
     }
@@ -1997,6 +2142,183 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
+
+    }
+
+    public void insertInitialWorkoutTypeData(SQLiteDatabase db) {
+
+        ContentValues values = new ContentValues();
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Strength");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Endurance");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Core");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Hangboard");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Custom");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
+
+    }
+
+    public void insertInitialWorkoutListData(SQLiteDatabase db) {
+
+        ContentValues values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Pull-Ups"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Squats"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Push-Ups"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Shoulder Press"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Random Endurance Workout"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Plank"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 3); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Front Lever"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 3); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Sit-Up"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 3); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "90deg Bent-Arm Hang"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 4); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Custom Something"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 5); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
 
     }
 

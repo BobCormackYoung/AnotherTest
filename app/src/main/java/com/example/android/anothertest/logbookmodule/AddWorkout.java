@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.example.android.anothertest.ExpandableListHolder;
 import com.example.android.anothertest.R;
 
 public class AddWorkout extends AppCompatActivity {
@@ -18,20 +17,20 @@ public class AddWorkout extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_workout);
+        setContentView(R.layout.activity_log_workout);
 
         LinearLayout workoutTextWrapper2 = findViewById(R.id.workoutTextWrapper2);
-        workoutTextWrapper2.setVisibility(View.GONE);
+        //workoutTextWrapper2.setVisibility(View.GONE);
         LinearLayout workoutTextWrapper3 = findViewById(R.id.workoutTextWrapper3);
-        workoutTextWrapper3.setVisibility(View.GONE);
+        //workoutTextWrapper3.setVisibility(View.GONE);
         LinearLayout workoutTextWrapper4 = findViewById(R.id.workoutTextWrapper4);
-        workoutTextWrapper4.setVisibility(View.GONE);
+        //workoutTextWrapper4.setVisibility(View.GONE);
         LinearLayout workoutTextWrapper5 = findViewById(R.id.workoutTextWrapper5);
-        workoutTextWrapper5.setVisibility(View.GONE);
+        //workoutTextWrapper5.setVisibility(View.GONE);
         LinearLayout workoutTextWrapper6 = findViewById(R.id.workoutTextWrapper6);
-        workoutTextWrapper6.setVisibility(View.GONE);
+        //workoutTextWrapper6.setVisibility(View.GONE);
         LinearLayout workoutTextWrapper7 = findViewById(R.id.workoutTextWrapper7);
-        workoutTextWrapper7.setVisibility(View.GONE);
+        //workoutTextWrapper7.setVisibility(View.GONE);
 
         // Listener for the training selection
         EditText gradeView = (EditText) findViewById(R.id.workoutEditText1);
@@ -79,12 +78,13 @@ public class AddWorkout extends AppCompatActivity {
 
     // method for launching the activity for picking the grade
     private void pickTraining() {
+        // TODO: Do something
         // Create new intent
-        Intent selectorIntent = new Intent(this, ExpandableListHolder.class);
+        //Intent selectorIntent = new Intent(this, ExpandableListHolder.class);
         // Add extra information to intent so that subsequent activity knows that we're requesting to generate list of grades
-        selectorIntent.putExtra("inputType","training_type");
+        //selectorIntent.putExtra("inputType","training_type");
         // Start activity for getting result
-        startActivityForResult(selectorIntent, PICK_TRAINING_REQUEST);
+        //startActivityForResult(selectorIntent, PICK_TRAINING_REQUEST);
     }
 
     private void getTrainingInputFields() {

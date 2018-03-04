@@ -67,6 +67,7 @@ public class SplashActivity extends AppCompatActivity {
         // and pass the context, which is the current activity.
         mDbHelper = new DatabaseHelper(this);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        db.close();
 
     }
 
