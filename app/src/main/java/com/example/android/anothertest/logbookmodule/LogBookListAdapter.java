@@ -45,8 +45,8 @@ public class LogBookListAdapter extends CursorAdapter {
         String info3Text = null;
 
         //check if climb or training
-        int logTag = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG));
-        if (logTag == DatabaseContract.ClimbLogEntry.LOGTAG_CLIMB) {
+        int logTag = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB));
+        if (logTag == DatabaseContract.ClimbLogEntry.IS_TRUE) {
             //Item is a climb, not a training session
             titleText = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.ClimbLogEntry.COLUMN_NAME));
             int gradeCode = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE));
@@ -79,7 +79,7 @@ public class LogBookListAdapter extends CursorAdapter {
 
         //View textContainer = listItemView.findViewById(R.id.log_book_list_item_wrapper);
         TextView textContainer = (TextView) view.findViewById(R.id.log_book_list_item_icon);
-        if (logTag == DatabaseContract.ClimbLogEntry.LOGTAG_CLIMB) {
+        if (logTag == DatabaseContract.ClimbLogEntry.IS_TRUE) {
             // Find the color that the resource ID maps to
             int color = ContextCompat.getColor(context, R.color.colorTrainingItems);
             // Set the background color of the text container View

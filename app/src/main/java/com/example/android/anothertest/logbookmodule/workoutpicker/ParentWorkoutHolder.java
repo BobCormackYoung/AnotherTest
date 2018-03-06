@@ -1,4 +1,4 @@
-package com.example.android.anothertest.logbookmodule.gradepicker;
+package com.example.android.anothertest.logbookmodule.workoutpicker;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,12 +18,12 @@ import com.example.android.anothertest.data.DatabaseHelper;
  * Created by Bobek on 11/02/2018.
  */
 
-public class ParentGradeHolder extends AppCompatActivity {
+public class ParentWorkoutHolder extends AppCompatActivity {
 
     private static final String TAG = "NestListHold_Tag";
     final int REQUEST_CODE_NUMBER = 3;
-    private int outputGradeName = 0;
-    private int outputGradeNumber = 0;
+    private int outputWorkoutName = 0;
+    private int outputWorkoutNumber = 0;
 
 
     @Override
@@ -31,12 +31,16 @@ public class ParentGradeHolder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parent_list);
 
+        Log.i(TAG, "ParentWorkoutHolder_1");
+
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
         SQLiteDatabase database = handler.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.GradeTypeEntry.TABLE_NAME, null);
+        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME, null);
 
-        ParentGradeAdapter parentAdapter = new ParentGradeAdapter(this, cursor);
+        Log.i(TAG, "SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME);
+
+        ParentWorkoutAdapter parentAdapter = new ParentWorkoutAdapter(this, cursor);
 
         ListView parentListView = (ListView) findViewById(R.id.parent_listview);
 
@@ -46,14 +50,14 @@ public class ParentGradeHolder extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                Log.i(TAG, Long.toString(id));
+                outputWorkoutName = (int) id;
 
-                outputGradeName = (int) id;
+                Log.i(TAG, "" + outputWorkoutName);
 
                 // Create new intent
-                Intent selectorIntent = new Intent(ParentGradeHolder.this, ChildGradeHolder.class);
+                Intent selectorIntent = new Intent(ParentWorkoutHolder.this, ChildWorkoutHolder.class);
                 // Add extra information to intent so that subsequent activity knows that we're requesting to generate list of grades
-                selectorIntent.putExtra("selector", outputGradeName);
+                selectorIntent.putExtra("selector", outputWorkoutName);
                 // Start activity for getting result
                 startActivityForResult(selectorIntent, REQUEST_CODE_NUMBER);
 
@@ -69,11 +73,14 @@ public class ParentGradeHolder extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 // The user picked a grade,
-                outputGradeNumber = data.getIntExtra("OutputData", 0);
+                outputWorkoutNumber = data.getIntExtra("OutputData", 0);
+
+                Log.i("TAG_Ouput", "" + outputWorkoutName + " | " + outputWorkoutNumber);
+
 
                 Intent outputIntent = new Intent();
-                outputIntent.putExtra("OutputGradeNumber", outputGradeNumber);
-                outputIntent.putExtra("OutputGradeName", outputGradeName);
+                outputIntent.putExtra("OutputWorkoutNumber", outputWorkoutNumber);
+                outputIntent.putExtra("OutputWorkoutName", outputWorkoutName);
                 setResult(RESULT_OK, outputIntent);
                 finish();
 

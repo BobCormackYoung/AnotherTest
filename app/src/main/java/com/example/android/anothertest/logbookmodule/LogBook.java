@@ -20,6 +20,8 @@ public class LogBook extends FragmentActivity {
     private static Context mContext;
     final int ADD_CLIMB_NEW = 0;
     final int ADD_CLIMB_EDIT = 1;
+    final int ADD_WORKOUT_NEW = 0;
+    final int ADD_WORKOUT_EDIT = 1;
     private CachingFragmentStatePagerAdapter adapterViewPager;
 
     @Override
@@ -93,8 +95,21 @@ public class LogBook extends FragmentActivity {
         button_add_workout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create a new intent to open the {@link FamilyActivity}
+                // Get the currently displayed page position
+                // Get it's calendar instance (date)
+                // Convert date to milliseconds
+                int position = vpPager.getCurrentItem();
+                Calendar cal = TimeUtils.getDayForPosition(position);
+                long date = cal.getTimeInMillis();
+                // Create intent to launch new activity
+                // Attach extras which will:
+                // 1) we're adding a new climb
+                // 2) negative rowID as we're not reading in any database rows
+                // 3) the date we're creating a record for (i.e. the date of the displayed page)
                 Intent AddWorkoutIntent = new Intent(LogBook.this, AddWorkout.class);
+                AddWorkoutIntent.putExtra("EditOrNewFlag", ADD_WORKOUT_NEW);
+                AddWorkoutIntent.putExtra("RowID", -1);
+                AddWorkoutIntent.putExtra("Date", date);
                 // Start the new activity
                 startActivity(AddWorkoutIntent);
             }

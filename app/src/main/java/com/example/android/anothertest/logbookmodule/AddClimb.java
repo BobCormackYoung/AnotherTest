@@ -1,11 +1,8 @@
 package com.example.android.anothertest.logbookmodule;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,10 +12,10 @@ import android.widget.Toast;
 
 import com.example.android.anothertest.R;
 import com.example.android.anothertest.data.DatabaseContract;
-import com.example.android.anothertest.data.DatabaseHelper;
 import com.example.android.anothertest.data.DatabaseReadWrite;
 import com.example.android.anothertest.logbookmodule.ascentpicker.AscentHolder;
 import com.example.android.anothertest.logbookmodule.gradepicker.ParentGradeHolder;
+import com.example.android.anothertest.util.TimeUtils;
 
 /**
  * Created by Bobek on 11/02/2018.
@@ -43,10 +40,6 @@ public class AddClimb extends AppCompatActivity {
     int inputIntentCode = -1;
     int inputRowID = -1;
 
-    public static String convertDate(long dateInMilliseconds, String dateFormat) {
-        return DateFormat.format(dateFormat, dateInMilliseconds).toString();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +53,7 @@ public class AddClimb extends AppCompatActivity {
         if (inputIntentCode == ADD_CLIMB_NEW) {
             // Add a new climb, don't import any data to the form
             //outputDate = Calendar.getInstance().getTimeInMillis();
-            String outputDateString = convertDate(outputDate, "yyyy-MM-dd");
+            String outputDateString = TimeUtils.convertDate(outputDate, "yyyy-MM-dd");
             EditText dateView = (EditText) findViewById(R.id.editText5);
             dateView.setText(outputDateString);
 
@@ -150,11 +143,11 @@ public class AddClimb extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Insufficient information - please ensure all fields are filled", Toast.LENGTH_SHORT).show();
                 } else {
                     if (inputIntentCode == ADD_CLIMB_EDIT) {
-                        long updateResult = updateData(outputRouteName, outputLocationName, outputAscent, outputGradeName, outputGradeNumber, outputDate, outputFirstAscent, inputRowID);
+                        long updateResult = DatabaseReadWrite.updateClimbLogData(outputRouteName, outputLocationName, outputAscent, outputGradeName, outputGradeNumber, outputDate, outputFirstAscent, inputRowID, AddClimb.this);
                         Toast.makeText(getApplicationContext(), "Existing Row ID: " + String.valueOf(updateResult), Toast.LENGTH_SHORT).show();
                         finish();
                     } else if (inputIntentCode == ADD_CLIMB_NEW) {
-                        long writeResult = writeData(outputRouteName, outputLocationName, outputAscent, outputGradeName, outputGradeNumber, outputDate, outputFirstAscent);
+                        long writeResult = DatabaseReadWrite.writeClimbLogData(outputRouteName, outputLocationName, outputAscent, outputGradeName, outputGradeNumber, outputDate, outputFirstAscent, AddClimb.this);
                         Toast.makeText(getApplicationContext(), "New Row ID: " + String.valueOf(writeResult), Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -234,61 +227,5 @@ public class AddClimb extends AppCompatActivity {
         gradeView.setText(outputStringAscentType);
     }
 
-    private void findGrade() {
-
-    }
-
-    private void findAscent() {
-
-    }
-
-    //write result information to database
-    private long writeData(String routeName, String locationName, int ascentType, int gradeType, int gradeNumber, long date, int firstAscent) {
-        // Gets the database in write mode
-        //Create handler to connect to SQLite DB
-        DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-
-        // Create a ContentValues object where column names are the keys,
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_DATE, date);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_NAME, routeName);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE, gradeType);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE, gradeNumber);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE, ascentType);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOCATION, locationName);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE, firstAscent);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG, DatabaseContract.ClimbLogEntry.LOGTAG_CLIMB);
-
-        long newRowId = database.insert(DatabaseContract.ClimbLogEntry.TABLE_NAME, null, values);
-        database.close();
-        return newRowId;
-    }
-
-    //update result information to database
-    private long updateData(String routeName, String locationName, int ascentType, int gradeType, int gradeNumber, long date, int firstAscent, int rowID) {
-        // Gets the database in write mode
-        //Create handler to connect to SQLite DB
-        DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-
-        // Create a ContentValues object where column names are the keys,
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_DATE, date);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_NAME, routeName);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE, gradeType);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE, gradeNumber);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE, ascentType);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOCATION, locationName);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE, firstAscent);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG, DatabaseContract.ClimbLogEntry.LOGTAG_CLIMB);
-
-        String whereClauseFive = DatabaseContract.ClimbLogEntry._ID + "=?";
-        String[] whereValueFive = {String.valueOf(rowID)};
-
-        long newRowId = database.update(DatabaseContract.ClimbLogEntry.TABLE_NAME, values, whereClauseFive, whereValueFive);
-        database.close();
-        return newRowId;
-    }
 }
 

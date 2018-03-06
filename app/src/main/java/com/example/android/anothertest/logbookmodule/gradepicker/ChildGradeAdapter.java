@@ -9,6 +9,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.android.anothertest.R;
+import com.example.android.anothertest.data.DatabaseContract.GradeListEntry;
 
 /**
  * Created by Bobek on 01/02/2018.
@@ -34,7 +35,7 @@ public class ChildGradeAdapter extends CursorAdapter {
         // Find fields to populate in inflated template
         TextView listItemText = (TextView) view.findViewById(R.id.list_item_text);
         // Extract properties from cursor
-        String body = cursor.getString(cursor.getColumnIndexOrThrow("GradeName"));
+        String body = cursor.getString(cursor.getColumnIndexOrThrow(GradeListEntry.COLUMN_GRADENAME));
         // Populate fields with extracted properties
         listItemText.setText(body);
     }

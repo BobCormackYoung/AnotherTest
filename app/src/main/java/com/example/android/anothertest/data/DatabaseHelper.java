@@ -77,7 +77,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ClimbLogEntry.COLUMN_ASCENTTYPECODE + " INTEGER, "
                 + ClimbLogEntry.COLUMN_LOCATION + " TEXT, "
                 + ClimbLogEntry.COLUMN_FIRSTASCENTCODE + " INTEGER, "
-                + ClimbLogEntry.COLUMN_LOGTAG + " INTEGER);";
+                + ClimbLogEntry.COLUMN_ISCLIMB + " INTEGER);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_CLIMBLOG_TABLE);
@@ -107,13 +107,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WorkoutLogEntry.COLUMN_WORKOUTTYPECODE + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_WORKOUTCODE + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_ISCLIMB + " INTEGER, "
-                + WorkoutLogEntry.COLUMN_WEIGHT + " LONG, "
+                + WorkoutLogEntry.COLUMN_WEIGHT + " REAL, "
                 + WorkoutLogEntry.COLUMN_SETCOUNT + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_REPCOUNTPERSET + " INTEGER, "
-                + WorkoutLogEntry.COLUMN_REPDURATIONPERSET + " LONG, "
-                + WorkoutLogEntry.COLUMN_RESTDURATIONPERSET + " LONG, "
+                + WorkoutLogEntry.COLUMN_REPDURATIONPERSET + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_RESTDURATIONPERSET + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_GRADETYPECODE + " INTEGER, "
-                + WorkoutLogEntry.COLUMN_GRADECODE + " INTEGER);";
+                + WorkoutLogEntry.COLUMN_GRADECODE + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_ISCOMPLETE + " INTEGER);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_WORKOUTLOG_TABLE);
@@ -1906,7 +1907,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -1918,7 +1919,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -1930,7 +1931,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -1942,7 +1943,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -1955,7 +1956,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1+1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -1967,7 +1968,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2+1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -1979,7 +1980,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3+1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -1991,7 +1992,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4+1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2004,7 +2005,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1+2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2016,7 +2017,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2+2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2028,7 +2029,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3+2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2040,7 +2041,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4+2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2053,7 +2054,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1-1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2065,7 +2066,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2-1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2077,7 +2078,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3-1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2089,7 +2090,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4-1");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2102,7 +2103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1-2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2114,7 +2115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2-2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2126,7 +2127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3-2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2138,7 +2139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4-2");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOGTAG, ClimbLogEntry.LOGTAG_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
         db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
 

@@ -1,4 +1,4 @@
-package com.example.android.anothertest.logbookmodule.gradepicker;
+package com.example.android.anothertest.logbookmodule.workoutpicker;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,7 +18,7 @@ import com.example.android.anothertest.data.DatabaseHelper;
  * Created by Bobek on 11/02/2018.
  */
 
-public class ChildGradeHolder extends AppCompatActivity {
+public class ChildWorkoutHolder extends AppCompatActivity {
 
     private static final String TAG = "NestListHold_Tag";
 
@@ -33,9 +33,9 @@ public class ChildGradeHolder extends AppCompatActivity {
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
         SQLiteDatabase database = handler.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.GradeListEntry.TABLE_NAME + " where " + DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE + "=" + selectorID, null);
+        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutListEntry.TABLE_NAME + " where " + DatabaseContract.WorkoutListEntry.COLUMN_WORKOUTTYPECODE + "=" + selectorID, null);
 
-        ChildGradeAdapter childAdapter = new ChildGradeAdapter(this, cursor);
+        ChildWorkoutAdapter childAdapter = new ChildWorkoutAdapter(this, cursor);
 
         ListView childListView = (ListView) findViewById(R.id.child_list);
 
@@ -45,9 +45,9 @@ public class ChildGradeHolder extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                Log.i(TAG, Long.toString(id));
-
                 int output = (int) id;
+
+                Log.i(TAG, "" + output);
 
                 Intent outputIntent = new Intent();
                 outputIntent.putExtra("OutputData", output);

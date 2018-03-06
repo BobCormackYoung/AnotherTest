@@ -72,7 +72,6 @@ public class TimeUtils {
         return DateFormat.format(dateFormat, dateInMilliseconds).toString();
     }
 
-
     public static String getFormattedDate(Context context, long date) {
         final String defaultPattern = "yyyy-MM-dd";
 

@@ -1,4 +1,4 @@
-package com.example.android.anothertest.logbookmodule.gradepicker;
+package com.example.android.anothertest.logbookmodule.workoutpicker;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,15 +9,15 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.example.android.anothertest.R;
-import com.example.android.anothertest.data.DatabaseContract.GradeTypeEntry;
+import com.example.android.anothertest.data.DatabaseContract.WorkoutListEntry;
 
 /**
  * Created by Bobek on 01/02/2018.
  */
 
-public class ParentGradeAdapter extends CursorAdapter {
+public class ChildWorkoutAdapter extends CursorAdapter {
 
-    public ParentGradeAdapter(Context context, Cursor cursor) {
+    public ChildWorkoutAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
     }
 
@@ -35,7 +35,7 @@ public class ParentGradeAdapter extends CursorAdapter {
         // Find fields to populate in inflated template
         TextView listItemText = (TextView) view.findViewById(R.id.list_item_text);
         // Extract properties from cursor
-        String body = cursor.getString(cursor.getColumnIndexOrThrow(GradeTypeEntry.COLUMN_GRADETYPENAME));
+        String body = cursor.getString(cursor.getColumnIndexOrThrow(WorkoutListEntry.COLUMN_NAME));
         // Populate fields with extracted properties
         listItemText.setText(body);
     }

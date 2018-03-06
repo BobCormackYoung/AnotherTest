@@ -1,5 +1,6 @@
 package com.example.android.anothertest.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,7 +45,7 @@ public class DatabaseReadWrite {
                 DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE,
                 DatabaseContract.ClimbLogEntry.COLUMN_LOCATION,
                 DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE,
-                DatabaseContract.ClimbLogEntry.COLUMN_LOGTAG};
+                DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB};
         String whereClause = DatabaseContract.ClimbLogEntry._ID + "=?";
         String[] whereValue = {String.valueOf(inputRowID)};
 
@@ -225,4 +226,282 @@ public class DatabaseReadWrite {
 
     }
 
+    /**
+     * Insert the climb data into the database
+     *
+     * @param routeName    String route name
+     * @param locationName String location name
+     * @param ascentType   int code for ascent
+     * @param gradeType    int code for grade type
+     * @param gradeNumber  int code for specific grade
+     * @param date         int date&time in milliseconds from epoch
+     * @param firstAscent  int firstascent or not (1 = true, 0 = false)
+     * @param mContext     Context context
+     * @return the row ID that has been added
+     */
+    public static long writeClimbLogData(String routeName, String locationName, int ascentType, int gradeType, int gradeNumber, long date, int firstAscent, Context mContext) {
+        // Gets the database in write mode
+        //Create handler to connect to SQLite DB
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        // Create a ContentValues object where column names are the keys,
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_DATE, date);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_NAME, routeName);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE, gradeType);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE, gradeNumber);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE, ascentType);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOCATION, locationName);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE, firstAscent);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.ClimbLogEntry.IS_TRUE);
+
+        long newRowId = database.insert(DatabaseContract.ClimbLogEntry.TABLE_NAME, null, values);
+        database.close();
+        return newRowId;
+
+    }
+
+    /**
+     * Update existing climb log entry
+     *
+     * @param routeName    String route name
+     * @param locationName String location name
+     * @param ascentType   int code for ascent
+     * @param gradeType    int code for grade type
+     * @param gradeNumber  int code for specific grade
+     * @param date         int date&time in milliseconds from epoch
+     * @param firstAscent  int firstascent or not (1 = true, 0 = false)
+     * @param rowID        int row ID of log that we want to edit
+     * @param mContext     Context context
+     * @return the row ID that has been edited
+     */
+    public static long updateClimbLogData(String routeName, String locationName, int ascentType, int gradeType, int gradeNumber, long date, int firstAscent, int rowID, Context mContext) {
+
+        // Gets the database in write mode
+        //Create handler to connect to SQLite DB
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        // Create a ContentValues object where column names are the keys,
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_DATE, date);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_NAME, routeName);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADETYPECODE, gradeType);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_GRADECODE, gradeNumber);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE, ascentType);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOCATION, locationName);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE, firstAscent);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.ClimbLogEntry.IS_TRUE);
+
+        String whereClauseFive = DatabaseContract.ClimbLogEntry._ID + "=?";
+        String[] whereValueFive = {String.valueOf(rowID)};
+
+        long newRowId = database.update(DatabaseContract.ClimbLogEntry.TABLE_NAME, values, whereClauseFive, whereValueFive);
+        database.close();
+        return newRowId;
+
+    }
+
+    /**
+     * Get the Workout name for a given ID
+     *
+     * @param workoutCode the workout ID
+     * @param mContext    the context
+     * @return A string containing the Workout Name
+     */
+    public static String getWorkoutTextClimb(int workoutCode, Context mContext) {
+
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.WorkoutListEntry._ID,
+                DatabaseContract.WorkoutListEntry.COLUMN_NAME};
+        String whereClause = DatabaseContract.WorkoutListEntry._ID + "=?";
+        String[] whereValue = {String.valueOf(workoutCode)};
+
+        Cursor cursor = database.query(DatabaseContract.WorkoutListEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_NAME);
+
+        try {
+            cursor.moveToFirst();
+            String outputString = cursor.getString(idColumnOutput);
+            return outputString;
+        } finally {
+            cursor.close();
+            database.close();
+        }
+
+    }
+
+    /**
+     * Get the workout name for a given ID
+     *
+     * @param workoutTypeCode the workout type ID
+     * @param mContext        the context
+     * @return A string containing the workout Type Name
+     */
+    public static String getWorkoutTypeClimb(int workoutTypeCode, Context mContext) {
+
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.WorkoutTypeEntry._ID,
+                DatabaseContract.WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME};
+        String whereClause = DatabaseContract.WorkoutTypeEntry._ID + "=?";
+        String[] whereValue = {String.valueOf(workoutTypeCode)};
+
+        Cursor cursor = database.query(DatabaseContract.WorkoutTypeEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME);
+
+        try {
+            cursor.moveToFirst();
+            String outputString = cursor.getString(idColumnOutput);
+            return outputString;
+        } finally {
+            cursor.close();
+            database.close();
+        }
+
+    }
+
+    /**
+     * Load the field data for the add workout class
+     *
+     * @param inputRowID the workout row of interest
+     * @param mContext   the context
+     * @return a Bundle containing true/false statements for
+     */
+    public static Bundle workoutLoadFields(int inputRowID, Context mContext) {
+
+        Bundle outputBundle = new Bundle();
+
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        String[] projection = {
+                DatabaseContract.WorkoutListEntry._ID,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISCLIMB,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISGRADECODE,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISREPCOUNTPERSET,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISREPDURATIONPERSET,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISSETCOUNT,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISWEIGHT};
+        String whereClause = DatabaseContract.WorkoutListEntry._ID + "=?";
+        String[] whereValue = {String.valueOf(inputRowID)};
+
+        Cursor cursor = database.query(DatabaseContract.WorkoutListEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        try {
+            cursor.moveToFirst();
+
+            // Get and set route name
+            int idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISCLIMB);
+            int outputIsClimb = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISGRADECODE);
+            int outputIsGradeCode = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISREPCOUNTPERSET);
+            int outputIsRepCountPerSet = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISREPDURATIONPERSET);
+            int outputRepDurationPerSet = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET);
+            int outputIsRestDuratonPerSet = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISSETCOUNT);
+            int outputIsSetCount = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISWEIGHT);
+            int outputIsWeight = cursor.getInt(idColumnOutput);
+
+            outputBundle.putInt("outputIsClimb", outputIsClimb);
+            outputBundle.putInt("outputIsGradeCode", outputIsGradeCode);
+            outputBundle.putInt("outputIsRepCountPerSet", outputIsRepCountPerSet);
+            outputBundle.putInt("outputRepDurationPerSet", outputRepDurationPerSet);
+            outputBundle.putInt("outputIsRestDuratonPerSet", outputIsRestDuratonPerSet);
+            outputBundle.putInt("outputIsSetCount", outputIsSetCount);
+            outputBundle.putInt("outputIsWeight", outputIsWeight);
+
+            return outputBundle;
+
+        } finally {
+            cursor.close();
+            database.close();
+        }
+
+    }
+
+    /**
+     * Insert workout into the database
+     *
+     * @param date            long date
+     * @param workoutTypeCode int code for workout tpe
+     * @param workoutCode     int code for actual workout
+     * @param weight          long weight
+     * @param setCount        int
+     * @param repCount        int
+     * @param repDuration     int
+     * @param restDuration    int
+     * @param gradeTypeCode   int
+     * @param gradeCode       int
+     * @param mContext        Context
+     * @return
+     */
+    public static long writeWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, Context mContext) {
+        // Gets the database in write mode
+        //Create handler to connect to SQLite DB
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        // Create a ContentValues object where column names are the keys,
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_DATE, date); // long
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WORKOUTTYPECODE, workoutTypeCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WORKOUTCODE, workoutCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_ISCLIMB, DatabaseContract.WorkoutLogEntry.IS_FALSE); // int = 0
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WEIGHT, weight); // long
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_SETCOUNT, setCount); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_REPCOUNTPERSET, repCount); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_REPDURATIONPERSET, repDuration); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_RESTDURATIONPERSET, restDuration); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADETYPECODE, gradeTypeCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADECODE, gradeCode); // int
+
+
+        long newRowId = database.insert(DatabaseContract.WorkoutLogEntry.TABLE_NAME, null, values);
+        database.close();
+        return newRowId;
+
+    }
+
 }
+
+

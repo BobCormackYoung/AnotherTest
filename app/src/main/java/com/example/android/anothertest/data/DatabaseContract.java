@@ -44,9 +44,9 @@ public final class DatabaseContract {
         public final static String COLUMN_ASCENTTYPECODE = "AscentTypeCode";
         public final static String COLUMN_LOCATION = "Location";
         public final static String COLUMN_FIRSTASCENTCODE = "FirstAscentCode";
-        public final static String COLUMN_LOGTAG = "LogTag";
+        public final static String COLUMN_ISCLIMB = "IsClimb";
 
-        public final static int LOGTAG_CLIMB = 1;
+        public final static int IS_TRUE = 1;
         public final static int FIRSTASCENT_TRUE = 1;
         public final static int FIRSTASCENT_FALSE = 0;
     }

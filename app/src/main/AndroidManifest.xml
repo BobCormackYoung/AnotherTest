@@ -19,13 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".logbookmodule.AddWorkout" />
         <activity android:name=".CalendarOverview" />
-        <activity android:name=".logbookmodule.gradepicker.ChildGradeHolder" />
         <activity android:name=".logbookmodule.LogBook" />
-        <activity android:name=".logbookmodule.gradepicker.ParentGradeHolder" />
         <activity android:name=".logbookmodule.AddClimb" />
+        <activity android:name=".logbookmodule.gradepicker.ChildGradeHolder" />
+        <activity android:name=".logbookmodule.gradepicker.ParentGradeHolder" />
         <activity android:name=".logbookmodule.ascentpicker.AscentHolder" />
+        <activity android:name=".logbookmodule.AddWorkout" />
+        <activity android:name=".logbookmodule.workoutpicker.ParentWorkoutHolder" />
+        <activity android:name=".logbookmodule.workoutpicker.ChildWorkoutHolder" />
     </application>
 
 </manifest>
