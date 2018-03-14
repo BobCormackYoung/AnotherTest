@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.example.android.anothertest.R;
 import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 /**
  * Created by Bobek on 11/02/2018.
@@ -21,6 +22,8 @@ import com.example.android.anothertest.data.DatabaseHelper;
 public class ChildGradeHolder extends AppCompatActivity {
 
     private static final String TAG = "ChildGradeHolder";
+    Cursor cursor;
+    SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +35,11 @@ public class ChildGradeHolder extends AppCompatActivity {
 
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
+        database = handler.getWritableDatabase();
 
         Log.i(TAG, "SELECT * FROM " + DatabaseContract.GradeListEntry.TABLE_NAME + " where " + DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE + "=" + selectorID);
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.GradeListEntry.TABLE_NAME + " where " + DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE + "=" + selectorID, null);
+        //final Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.GradeListEntry.TABLE_NAME + " where " + DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE + "=" + selectorID, null);
+        cursor = DatabaseReadWrite.getGradeList(selectorID, database);
         Log.i(TAG, "Count: " + cursor.getCount());
 
         ChildGradeAdapter childAdapter = new ChildGradeAdapter(this, cursor);
@@ -55,8 +59,13 @@ public class ChildGradeHolder extends AppCompatActivity {
                 Intent outputIntent = new Intent();
                 outputIntent.putExtra("OutputData", output);
                 setResult(RESULT_OK, outputIntent);
-                finish();
-
+                try {
+                    finish();
+                } finally {
+                    cursor.close();
+                    database.close();
+                    Log.i(TAG, "finally...");
+                }
             }
         });
 

@@ -11,8 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.anothertest.R;
-import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 /**
  * Created by Bobek on 11/02/2018.
@@ -22,9 +22,10 @@ public class ParentGradeHolder extends AppCompatActivity {
 
     private static final String TAG = "ParentGradeHolder";
     final int REQUEST_CODE_NUMBER = 3;
+    SQLiteDatabase database;
+    Cursor cursor;
     private int outputGradeName = 0;
     private int outputGradeNumber = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +34,9 @@ public class ParentGradeHolder extends AppCompatActivity {
 
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.GradeTypeEntry.TABLE_NAME, null);
+        database = handler.getWritableDatabase();
+        //Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.GradeTypeEntry.TABLE_NAME, null);
+        cursor = DatabaseReadWrite.getGradeTypes(database);
 
         ParentGradeAdapter parentAdapter = new ParentGradeAdapter(this, cursor);
 
@@ -75,7 +77,13 @@ public class ParentGradeHolder extends AppCompatActivity {
                 outputIntent.putExtra("OutputGradeNumber", outputGradeNumber);
                 outputIntent.putExtra("OutputGradeName", outputGradeName);
                 setResult(RESULT_OK, outputIntent);
-                finish();
+                try {
+                    finish();
+                } finally {
+                    cursor.close();
+                    database.close();
+                    Log.i(TAG, "finally...");
+                }
 
             }
             // TODO: Error handler for nothing passed back

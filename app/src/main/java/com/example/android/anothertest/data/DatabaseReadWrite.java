@@ -715,6 +715,13 @@ public class DatabaseReadWrite {
         }
     }
 
+    /**
+     * Get a cursor for the workout list for a specific workout type
+     *
+     * @param id int workout type ID
+     * @param db database being queried
+     * @return Cursor cursor
+     */
     public static Cursor getWorkoutList(int id, SQLiteDatabase db) {
         //grade type
         String[] projection = {
@@ -729,6 +736,105 @@ public class DatabaseReadWrite {
                 projection,
                 whereClause,
                 whereValue,
+                null,
+                null,
+                null);
+
+        return cursor;
+    }
+
+    /**
+     * return a cursor for all workout types
+     *
+     * @param db the database being queried
+     * @return Cursor cursor
+     */
+    public static Cursor getWorkoutTypes(SQLiteDatabase db) {
+        //grade type
+        String[] projection = {
+                DatabaseContract.WorkoutTypeEntry._ID,
+                DatabaseContract.WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME,
+                DatabaseContract.WorkoutTypeEntry.COLUMN_DESCRIPTION};
+
+        Cursor cursor = db.query(DatabaseContract.WorkoutTypeEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        return cursor;
+    }
+
+    /**
+     * Get a cursor for the grade list for a specific grade type
+     *
+     * @param id int workout type ID
+     * @param db database being queried
+     * @return Cursor cursor
+     */
+    public static Cursor getGradeList(int id, SQLiteDatabase db) {
+        //grade type
+        String[] projection = {
+                DatabaseContract.GradeListEntry._ID,
+                DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE,
+                DatabaseContract.GradeListEntry.COLUMN_GRADENAME,
+                DatabaseContract.GradeListEntry.COLUMN_RELATIVEDIFFICULTY};
+        String whereClause = DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE + "=?";
+        String[] whereValue = {String.valueOf(id)};
+
+        Cursor cursor = db.query(DatabaseContract.GradeListEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        return cursor;
+    }
+
+    /**
+     * return a cursor for all grade types
+     *
+     * @param db the database being queried
+     * @return Cursor cursor
+     */
+    public static Cursor getGradeTypes(SQLiteDatabase db) {
+        //grade type
+        String[] projection = {
+                DatabaseContract.GradeTypeEntry._ID,
+                DatabaseContract.GradeTypeEntry.COLUMN_GRADETYPENAME};
+
+        Cursor cursor = db.query(DatabaseContract.GradeTypeEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        return cursor;
+    }
+
+    /**
+     * return a cursor for all ascent types
+     *
+     * @param db the database being queried
+     * @return Cursor cursor
+     */
+    public static Cursor getAscentList(SQLiteDatabase db) {
+        //grade type
+        String[] projection = {
+                DatabaseContract.AscentEntry._ID,
+                DatabaseContract.AscentEntry.COLUMN_ASCENTTYPENAME,
+                DatabaseContract.AscentEntry.COLUMN_DESCRIPTION};
+
+        Cursor cursor = db.query(DatabaseContract.AscentEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
                 null,
                 null,
                 null);

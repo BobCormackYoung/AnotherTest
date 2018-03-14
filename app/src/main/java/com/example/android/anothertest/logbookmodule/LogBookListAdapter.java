@@ -72,7 +72,7 @@ public class LogBookListAdapter extends CursorAdapter {
             int workoutCode = bundle.getInt("outputWorkoutCode");
             titleText = DatabaseReadWrite.getWorkoutTextClimb(workoutCode, context);
             info1Text = "Sets x Reps: " + bundle.getInt("outputSetCount") + "x" + bundle.getInt("outputRepCount");
-            info2Text = "Additional Weight: " + bundle.getInt("outputWeight") + " Kg";
+            info2Text = "Additional Weight: " + bundle.getDouble("outputWeight") + " Kg";
             info3Text = "...";
             gradeText = "WK";
             //TODO: add logic so that correct information is displayed for this item

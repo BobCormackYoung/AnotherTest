@@ -11,8 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.anothertest.R;
-import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 /**
  * Created by Bobek on 01/02/2018.
@@ -20,7 +20,9 @@ import com.example.android.anothertest.data.DatabaseHelper;
 
 public class AscentHolder extends AppCompatActivity {
 
-    private static final String TAG = "NestListHold_Tag";
+    private static final String TAG = "AscentHolder";
+    Cursor cursor;
+    SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,9 @@ public class AscentHolder extends AppCompatActivity {
 
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.AscentEntry.TABLE_NAME, null);
+        database = handler.getWritableDatabase();
+        // Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.AscentEntry.TABLE_NAME, null);
+        cursor = DatabaseReadWrite.getAscentList(database);
 
         AscentAdapter parentAdapter = new AscentAdapter(this, cursor);
 
@@ -49,7 +52,13 @@ public class AscentHolder extends AppCompatActivity {
                 Intent outputIntent = new Intent();
                 outputIntent.putExtra("OutputData", output);
                 setResult(RESULT_OK, outputIntent);
-                finish();
+                try {
+                    finish();
+                } finally {
+                    cursor.close();
+                    database.close();
+                    Log.i(TAG, "finally...");
+                }
 
             }
         });

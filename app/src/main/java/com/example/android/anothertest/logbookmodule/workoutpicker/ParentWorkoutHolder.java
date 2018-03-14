@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.example.android.anothertest.R;
 import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 /**
  * Created by Bobek on 11/02/2018.
@@ -22,9 +23,10 @@ public class ParentWorkoutHolder extends AppCompatActivity {
 
     private static final String TAG = "ParentWorkoutHolder";
     final int REQUEST_CODE_NUMBER = 3;
+    SQLiteDatabase database;
+    Cursor cursor;
     private int outputWorkoutName = 0;
     private int outputWorkoutNumber = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +37,10 @@ public class ParentWorkoutHolder extends AppCompatActivity {
 
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
-        final SQLiteDatabase database = handler.getWritableDatabase();
-        final Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME, null);
+        database = handler.getWritableDatabase();
+        //final Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME, null);
+
+        cursor = DatabaseReadWrite.getWorkoutTypes(database);
 
         Log.i(TAG, "SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME);
 
@@ -59,15 +63,7 @@ public class ParentWorkoutHolder extends AppCompatActivity {
                 // Add extra information to intent so that subsequent activity knows that we're requesting to generate list of grades
                 selectorIntent.putExtra("selector", outputWorkoutName);
                 // Start activity for getting result
-                try {
-                    startActivityForResult(selectorIntent, REQUEST_CODE_NUMBER);
-                } finally {
-                    cursor.close();
-                    database.close();
-                    Log.i(TAG, "finally...");
-                }
-
-
+                startActivityForResult(selectorIntent, REQUEST_CODE_NUMBER);
             }
         });
 
@@ -84,12 +80,18 @@ public class ParentWorkoutHolder extends AppCompatActivity {
 
                 Log.i("TAG_Ouput", "" + outputWorkoutName + " | " + outputWorkoutNumber);
 
-
                 Intent outputIntent = new Intent();
                 outputIntent.putExtra("OutputWorkoutNumber", outputWorkoutNumber);
                 outputIntent.putExtra("OutputWorkoutName", outputWorkoutName);
                 setResult(RESULT_OK, outputIntent);
-                finish();
+
+                try {
+                    finish();
+                } finally {
+                    cursor.close();
+                    database.close();
+                    Log.i(TAG, "finally...");
+                }
 
             }
             // TODO: Error handler for nothing passed back
