@@ -60,9 +60,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Create a String that contains the SQL statement to create the calendar tracker table
         String SQL_CREATE_CALENDERTRACKER_TABLE = "CREATE TABLE " + CalendarTrackerEntry.TABLE_NAME + " ("
                 + CalendarTrackerEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "
-                + CalendarTrackerEntry.COLUMN_DATE + " INTEGER NOT NULL UNIQUE, "
-                + CalendarTrackerEntry.COLUMN_WORKOUTCOUNT + " INTEGER, "
-                + CalendarTrackerEntry.COLUMN_CLIMBCOUNT + " INTEGER);";
+                + CalendarTrackerEntry.COLUMN_DATE + " INTEGER NOT NULL, "
+                + CalendarTrackerEntry.COLUMN_ISCLIMB + " INTEGER, "
+                + CalendarTrackerEntry.COLUMN_ROWID + " INTEGER);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_CALENDERTRACKER_TABLE);
@@ -114,6 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WorkoutLogEntry.COLUMN_RESTDURATIONPERSET + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_GRADETYPECODE + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_GRADECODE + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_MOVECOUNT + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_ISCOMPLETE + " INTEGER);";
 
         // Execute the SQL statement
@@ -123,7 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String SQL_CREATE_WORKOUTLIST_TABLE = "CREATE TABLE " + WorkoutListEntry.TABLE_NAME + " ("
                 + WorkoutListEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "
                 + WorkoutListEntry.COLUMN_NAME + " TEXT, "
-                + WorkoutListEntry.COLUMN_WORKOUTTYPECODE + " INTEGER, "
+                + WorkoutListEntry.COLUMN_WORKOUTTYPECODE + " INTEGER NOT NULL, "
                 + WorkoutListEntry.COLUMN_DESCRIPTION + " TEXT, "
                 + WorkoutListEntry.COLUMN_ISCLIMB + " INTEGER, "
                 + WorkoutListEntry.COLUMN_ISWEIGHT + " INTEGER, "
@@ -131,7 +132,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WorkoutListEntry.COLUMN_ISREPCOUNTPERSET + " INTEGER, "
                 + WorkoutListEntry.COLUMN_ISREPDURATIONPERSET + " INTEGER, "
                 + WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET + " INTEGER, "
-                + WorkoutListEntry.COLUMN_ISGRADECODE + " INTEGER);";
+                + WorkoutListEntry.COLUMN_ISGRADECODE + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISMOVECOUNT + " INTEGER);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_WORKOUTLIST_TABLE);
@@ -145,7 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_WORKOUTTYPE_TABLE);
 
-        Log.v(LOG_TAG, "Database Creation Method Run");
+        Log.i(LOG_TAG, "Database Creation Method Run");
 
         insertInitialGradeListData(db);
 
@@ -157,11 +159,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         insertInitialWorkoutListData(db);
 
-        Log.v(LOG_TAG, "Database Initial Fill Method Run");
+        Log.i(LOG_TAG, "Database Initial Fill Method Run");
 
         insertDummyClimbs(db);
 
-        Log.v(LOG_TAG, "Database Dummy Fill Method Run");
+        Log.i(LOG_TAG, "Database Dummy Fill Method Run");
 
     }
 
@@ -1901,249 +1903,187 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1");
+        values.put(ClimbLogEntry.COLUMN_NAME, "Action Directe");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Frankenjura");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        long writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
+        ContentValues values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, currentDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2");
+        values.put(ClimbLogEntry.COLUMN_NAME, "Silence");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Flatanger");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, currentDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, currentDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         //day+1
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1+1");
+        values.put(ClimbLogEntry.COLUMN_NAME, "One Slap");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1+1");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Arco");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayTwoDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2+1");
+        values.put(ClimbLogEntry.COLUMN_NAME, "Marina Superstar");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2+1");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Domusnovas");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3+1");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3+1");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayTwoDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4+1");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4+1");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayTwoDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         //day+2
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1+2");
+        values.put(ClimbLogEntry.COLUMN_NAME, "La Planta de Shiva");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1+2");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Villanueva del Rosario");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayThreeDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2+2");
+        values.put(ClimbLogEntry.COLUMN_NAME, "La Dura Dura");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2+2");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Oliana");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3+2");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3+2");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayThreeDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4+2");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4+2");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayThreeDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         //day-1
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1-1");
+        values.put(ClimbLogEntry.COLUMN_NAME, "Brad Pitt");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1-1");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Stanage");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFourDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2-1");
+        values.put(ClimbLogEntry.COLUMN_NAME, "Golpe de Estado");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2-1");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Siurana");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3-1");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3-1");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayFourDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4-1");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4-1");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFourDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         //day-2
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 1-2");
+        values.put(ClimbLogEntry.COLUMN_NAME, "El Bon Combat");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 1-2");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "La Cova de l'Ocell");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFiveDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
 
         values = new ContentValues();
         values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 2-2");
+        values.put(ClimbLogEntry.COLUMN_NAME, "First Round First Minute");
         values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 2-2");
+        values.put(ClimbLogEntry.COLUMN_LOCATION, "Margalef");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 3-2");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 3-2");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
-
-        values = new ContentValues();
-        values.put(ClimbLogEntry.COLUMN_DATE, dayFiveDate);
-        values.put(ClimbLogEntry.COLUMN_NAME, "Climb 4-2");
-        values.put(ClimbLogEntry.COLUMN_GRADETYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_GRADECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
-        values.put(ClimbLogEntry.COLUMN_LOCATION, "Location 4-2");
-        values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_TRUE);
-        db.insert(ClimbLogEntry.TABLE_NAME, null, values);
-        values.clear();
-
-
+        values2 = new ContentValues();
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFiveDate);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
+        db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
+        values2.clear();
     }
 
     public void insertInitialWorkoutTypeData(SQLiteDatabase db) {
@@ -2181,6 +2121,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void insertInitialWorkoutListData(SQLiteDatabase db) {
 
+        Log.i(LOG_TAG, "insertInitialWorkoutListData");
+
         ContentValues values = new ContentValues();
         values.put(WorkoutListEntry.COLUMN_NAME, "Pull-Ups"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
@@ -2192,6 +2134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2199,13 +2142,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Squats"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Integer
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2220,6 +2164,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2234,6 +2179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2248,6 +2194,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2262,6 +2209,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2276,6 +2224,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2290,6 +2239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2304,6 +2254,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2318,6 +2269,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 

@@ -32,7 +32,7 @@ public abstract class CachingFragmentStatePagerAdapter extends FragmentStatePage
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         registeredFragments.remove(position);
-        Log.i("CachingFragmentAdapter", "item destroyed");
+        Log.i("CachingFragmentAdapter", "item #" + position + " destroyed");
         super.destroyItem(container, position, object);
     }
 

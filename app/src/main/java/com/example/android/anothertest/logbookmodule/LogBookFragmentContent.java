@@ -1,13 +1,13 @@
 package com.example.android.anothertest.logbookmodule;
 
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.android.anothertest.R;
 import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 import static com.example.android.anothertest.util.TimeUtils.millisToStartOfDay;
 
@@ -95,14 +96,22 @@ public class LogBookFragmentContent extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    // Create a new intent to open the {@link FamilyActivity}
-                    Intent editClimbIntent = new Intent(context, AddClimb.class);
-                    editClimbIntent.putExtra("EditOrNewFlag", ADD_CLIMB_EDIT);
-                    editClimbIntent.putExtra("RowID", (int) id);
-                    editClimbIntent.putExtra("Date", (long) fragmentDate);
-                    // Start the new activity
-                    Log.i("TAG ME UP", "OnItemClick " + (int) id + " " + ADD_CLIMB_EDIT + " " + fragmentDate);
-                    startActivity(editClimbIntent);
+                    // Find the child row ID & whether it is a climb or not
+                    int childRowID = DatabaseReadWrite.getCalendarTrackerChildRowID(id, context);
+                    int isClimb = DatabaseReadWrite.getCalendarTrackerIsClimb(id, context);
+
+                    // if it is a climb, then start a new intent for modifying the climb, if not, start for modifying training
+                    if (isClimb == DatabaseContract.ClimbLogEntry.IS_CLIMB) {
+                        Intent editClimbIntent = new Intent(context, AddClimb.class);
+                        editClimbIntent.putExtra("EditOrNewFlag", ADD_CLIMB_EDIT);
+                        editClimbIntent.putExtra("RowID", childRowID);
+                        editClimbIntent.putExtra("Date", (long) fragmentDate);
+                        // Start the new activity
+                        Log.i("TAG ME UP", "OnItemClick " + (int) id + " " + ADD_CLIMB_EDIT + " " + fragmentDate);
+                        startActivity(editClimbIntent);
+                    } else {
+                        // TODO: start intent to modify workout
+                    }
                 }
             });
 
@@ -146,7 +155,7 @@ public class LogBookFragmentContent extends Fragment {
     }
 
     public Cursor getCursorBetweenDates(long dateStart, long dateEnd, SQLiteDatabase db) {
-        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.ClimbLogEntry.TABLE_NAME + " where " + DatabaseContract.ClimbLogEntry.COLUMN_DATE + " BETWEEN '" + dateStart + "' AND '" + dateEnd + "' ORDER BY Date ASC", null);
+        Cursor cursor = db.rawQuery("select * from " + DatabaseContract.CalendarTrackerEntry.TABLE_NAME + " where " + DatabaseContract.CalendarTrackerEntry.COLUMN_DATE + " BETWEEN '" + dateStart + "' AND '" + dateEnd + "' ORDER BY Date ASC", null);
         return cursor;
     }
 
@@ -159,7 +168,23 @@ public class LogBookFragmentContent extends Fragment {
         alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String table = DatabaseContract.ClimbLogEntry.TABLE_NAME;
+                // Find the child row ID & whether it is a climb or not
+                int childRowID = DatabaseReadWrite.getCalendarTrackerChildRowID(id, context);
+                int isClimb = DatabaseReadWrite.getCalendarTrackerIsClimb(id, context);
+                // if it is a climb, delete entry from the climb-log, if not a climb delete from the training log
+                if (isClimb == DatabaseContract.ClimbLogEntry.IS_CLIMB) {
+                    String table = DatabaseContract.ClimbLogEntry.TABLE_NAME;
+                    String whereClause = "_id=?";
+                    String[] whereArgs = new String[]{String.valueOf(childRowID)};
+                    database.delete(table, whereClause, whereArgs);
+                } else {
+                    String table = DatabaseContract.WorkoutLogEntry.TABLE_NAME;
+                    String whereClause = "_id=?";
+                    String[] whereArgs = new String[]{String.valueOf(childRowID)};
+                    database.delete(table, whereClause, whereArgs);
+                }
+                // delete from the calendar tracker
+                String table = DatabaseContract.CalendarTrackerEntry.TABLE_NAME;
                 String whereClause = "_id=?";
                 String[] whereArgs = new String[]{String.valueOf(id)};
                 database.delete(table, whereClause, whereArgs);

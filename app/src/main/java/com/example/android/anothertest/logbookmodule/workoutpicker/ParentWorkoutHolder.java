@@ -20,7 +20,7 @@ import com.example.android.anothertest.data.DatabaseHelper;
 
 public class ParentWorkoutHolder extends AppCompatActivity {
 
-    private static final String TAG = "NestListHold_Tag";
+    private static final String TAG = "ParentWorkoutHolder";
     final int REQUEST_CODE_NUMBER = 3;
     private int outputWorkoutName = 0;
     private int outputWorkoutNumber = 0;
@@ -35,8 +35,8 @@ public class ParentWorkoutHolder extends AppCompatActivity {
 
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME, null);
+        final SQLiteDatabase database = handler.getWritableDatabase();
+        final Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME, null);
 
         Log.i(TAG, "SELECT * FROM " + DatabaseContract.WorkoutTypeEntry.TABLE_NAME);
 
@@ -59,7 +59,14 @@ public class ParentWorkoutHolder extends AppCompatActivity {
                 // Add extra information to intent so that subsequent activity knows that we're requesting to generate list of grades
                 selectorIntent.putExtra("selector", outputWorkoutName);
                 // Start activity for getting result
-                startActivityForResult(selectorIntent, REQUEST_CODE_NUMBER);
+                try {
+                    startActivityForResult(selectorIntent, REQUEST_CODE_NUMBER);
+                } finally {
+                    cursor.close();
+                    database.close();
+                    Log.i(TAG, "finally...");
+                }
+
 
             }
         });

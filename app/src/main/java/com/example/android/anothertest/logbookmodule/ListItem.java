@@ -15,12 +15,4 @@ public class ListItem {
         mListItemName = listItemName;
     }
 
-    public int getListItemID() {
-        return mListItemID;
-    }
-
-    public String getListItemName() {
-        return mListItemName;
-    }
-
 }

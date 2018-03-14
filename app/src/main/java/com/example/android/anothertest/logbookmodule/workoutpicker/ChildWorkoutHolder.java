@@ -11,8 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.anothertest.R;
-import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseHelper;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 /**
  * Created by Bobek on 11/02/2018.
@@ -20,7 +20,7 @@ import com.example.android.anothertest.data.DatabaseHelper;
 
 public class ChildWorkoutHolder extends AppCompatActivity {
 
-    private static final String TAG = "NestListHold_Tag";
+    private static final String TAG = "ChildWorkoutHolder";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,14 @@ public class ChildWorkoutHolder extends AppCompatActivity {
 
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
-        SQLiteDatabase database = handler.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutListEntry.TABLE_NAME + " where " + DatabaseContract.WorkoutListEntry.COLUMN_WORKOUTTYPECODE + "=" + selectorID, null);
+        final SQLiteDatabase database = handler.getWritableDatabase();
+
+        Log.i(TAG, "" + selectorID);
+        //Log.i(TAG,"SELECT * FROM " + DatabaseContract.WorkoutListEntry.TABLE_NAME);
+        //Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutListEntry.TABLE_NAME + " WHERE " + DatabaseContract.WorkoutListEntry.COLUMN_WORKOUTTYPECODE + "=" + selectorID, null);
+        //Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.WorkoutListEntry.TABLE_NAME, null);
+        final Cursor cursor = DatabaseReadWrite.getWorkoutList(selectorID, database);
+        Log.i(TAG, "Count: " + cursor.getCount());
 
         ChildWorkoutAdapter childAdapter = new ChildWorkoutAdapter(this, cursor);
 
@@ -52,7 +58,14 @@ public class ChildWorkoutHolder extends AppCompatActivity {
                 Intent outputIntent = new Intent();
                 outputIntent.putExtra("OutputData", output);
                 setResult(RESULT_OK, outputIntent);
-                finish();
+
+                try {
+                    finish();
+                } finally {
+                    cursor.close();
+                    database.close();
+                    Log.i(TAG, "finally...");
+                }
 
             }
         });

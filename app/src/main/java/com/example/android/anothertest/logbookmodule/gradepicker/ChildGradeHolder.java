@@ -20,7 +20,7 @@ import com.example.android.anothertest.data.DatabaseHelper;
 
 public class ChildGradeHolder extends AppCompatActivity {
 
-    private static final String TAG = "NestListHold_Tag";
+    private static final String TAG = "ChildGradeHolder";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,10 @@ public class ChildGradeHolder extends AppCompatActivity {
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(this);
         SQLiteDatabase database = handler.getWritableDatabase();
+
+        Log.i(TAG, "SELECT * FROM " + DatabaseContract.GradeListEntry.TABLE_NAME + " where " + DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE + "=" + selectorID);
         Cursor cursor = database.rawQuery("SELECT * FROM " + DatabaseContract.GradeListEntry.TABLE_NAME + " where " + DatabaseContract.GradeListEntry.COLUMN_GRADETYPECODE + "=" + selectorID, null);
+        Log.i(TAG, "Count: " + cursor.getCount());
 
         ChildGradeAdapter childAdapter = new ChildGradeAdapter(this, cursor);
 

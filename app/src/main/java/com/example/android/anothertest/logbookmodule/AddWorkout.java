@@ -17,6 +17,8 @@ import com.example.android.anothertest.data.DatabaseReadWrite;
 import com.example.android.anothertest.logbookmodule.workoutpicker.ParentWorkoutHolder;
 import com.example.android.anothertest.util.TimeUtils;
 
+// TODO: Add the location for adding information about the movecount
+
 public class AddWorkout extends AppCompatActivity {
 
     final int PICK_TRAINING_REQUEST = 1;
@@ -38,7 +40,6 @@ public class AddWorkout extends AppCompatActivity {
     int counterRepCount = 1;
     int counterRepTime = 0;
     int counterSetCount = 1;
-
 
     TextView titleWrapper; // Title wrapper
 
@@ -297,7 +298,8 @@ public class AddWorkout extends AppCompatActivity {
 
                 if (outputWorkoutNumber != 0 && outputWorkoutName != 0) {
                     long outputRow = DatabaseReadWrite.writeWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
-                            counterRepCount, counterRepTime, counterRestTime, 0, 0, AddWorkout.this);
+                            counterRepCount, counterRepTime, counterRestTime, 0, 0, 0, AddWorkout.this);
+                    DatabaseReadWrite.writeCalendarUpdate(DatabaseContract.WorkoutLogEntry.IS_WORKOUT, outputDate, outputRow, AddWorkout.this);
                     Toast.makeText(getApplicationContext(), "New Row ID: " + outputRow, Toast.LENGTH_SHORT).show();
                     finish();
                 } else {

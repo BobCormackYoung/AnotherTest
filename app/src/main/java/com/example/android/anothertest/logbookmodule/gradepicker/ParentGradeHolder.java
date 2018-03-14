@@ -20,7 +20,7 @@ import com.example.android.anothertest.data.DatabaseHelper;
 
 public class ParentGradeHolder extends AppCompatActivity {
 
-    private static final String TAG = "NestListHold_Tag";
+    private static final String TAG = "ParentGradeHolder";
     final int REQUEST_CODE_NUMBER = 3;
     private int outputGradeName = 0;
     private int outputGradeNumber = 0;
