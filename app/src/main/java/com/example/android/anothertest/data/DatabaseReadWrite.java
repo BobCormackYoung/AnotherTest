@@ -359,7 +359,7 @@ public class DatabaseReadWrite {
         values.put(DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE, ascentType);
         values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOCATION, locationName);
         values.put(DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE, firstAscent);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.ClimbLogEntry.IS_CLIMB);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
 
         long newRowId = database.insert(DatabaseContract.ClimbLogEntry.TABLE_NAME, null, values);
         database.close();
@@ -397,7 +397,7 @@ public class DatabaseReadWrite {
         values.put(DatabaseContract.ClimbLogEntry.COLUMN_ASCENTTYPECODE, ascentType);
         values.put(DatabaseContract.ClimbLogEntry.COLUMN_LOCATION, locationName);
         values.put(DatabaseContract.ClimbLogEntry.COLUMN_FIRSTASCENTCODE, firstAscent);
-        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.ClimbLogEntry.IS_CLIMB);
+        values.put(DatabaseContract.ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
 
         String whereClauseFive = DatabaseContract.ClimbLogEntry._ID + "=?";
         String[] whereValueFive = {String.valueOf(rowID)};
@@ -596,7 +596,7 @@ public class DatabaseReadWrite {
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_DATE, date); // long
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WORKOUTTYPECODE, workoutTypeCode); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WORKOUTCODE, workoutCode); // int
-        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_ISCLIMB, DatabaseContract.WorkoutLogEntry.IS_WORKOUT); // int = 0
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_WORKOUT); // int = 0
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WEIGHT, weight); // long
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_SETCOUNT, setCount); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_REPCOUNTPERSET, repCount); // int
@@ -608,6 +608,52 @@ public class DatabaseReadWrite {
 
 
         long newRowId = database.insert(DatabaseContract.WorkoutLogEntry.TABLE_NAME, null, values);
+        database.close();
+        return newRowId;
+
+    }
+
+    /**
+     * Insert workout into the database
+     *
+     * @param date            long date
+     * @param workoutTypeCode int code for workout tpe
+     * @param workoutCode     int code for actual workout
+     * @param weight          long weight
+     * @param setCount        int
+     * @param repCount        int
+     * @param repDuration     int
+     * @param restDuration    int
+     * @param gradeTypeCode   int
+     * @param gradeCode       int
+     * @param mContext        Context
+     * @return
+     */
+    public static long updateWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int rowID, Context mContext) {
+        // Gets the database in write mode
+        //Create handler to connect to SQLite DB
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        // Create a ContentValues object where column names are the keys,
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_DATE, date); // long
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WORKOUTTYPECODE, workoutTypeCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WORKOUTCODE, workoutCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_WORKOUT); // int = 0
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WEIGHT, weight); // long
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_SETCOUNT, setCount); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_REPCOUNTPERSET, repCount); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_REPDURATIONPERSET, repDuration); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_RESTDURATIONPERSET, restDuration); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADETYPECODE, gradeTypeCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_MOVECOUNT, moveCount); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADECODE, gradeCode); // int
+
+        String whereClauseFive = DatabaseContract.WorkoutLogEntry._ID + "=?";
+        String[] whereValueFive = {String.valueOf(rowID)};
+
+        long newRowId = database.update(DatabaseContract.WorkoutLogEntry.TABLE_NAME, values, whereClauseFive, whereValueFive);
         database.close();
         return newRowId;
 

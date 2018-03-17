@@ -78,9 +78,9 @@ public class AddClimb extends AppCompatActivity {
 
             CheckBox firstAscentCheckBox = (CheckBox) findViewById(R.id.checkbox_firstascent);
             outputFirstAscent = bundle.getInt("outputFirstAscent");
-            if (outputFirstAscent == DatabaseContract.ClimbLogEntry.FIRSTASCENT_TRUE) {
+            if (outputFirstAscent == DatabaseContract.FIRSTASCENT_TRUE) {
                 firstAscentCheckBox.setChecked(true);
-            } else if (outputFirstAscent == DatabaseContract.ClimbLogEntry.FIRSTASCENT_FALSE) {
+            } else if (outputFirstAscent == DatabaseContract.FIRSTASCENT_FALSE) {
                 firstAscentCheckBox.setChecked(false);
             }
             outputGradeNumber = bundle.getInt("outputGradeNumber");
@@ -131,9 +131,9 @@ public class AddClimb extends AppCompatActivity {
                 outputRouteName = routeNameView.getText().toString();
                 outputLocationName = locationNameView.getText().toString();
                 if (firstAscentCheckBox.isChecked()) {
-                    outputFirstAscent = DatabaseContract.ClimbLogEntry.FIRSTASCENT_TRUE;
+                    outputFirstAscent = DatabaseContract.FIRSTASCENT_TRUE;
                 } else {
-                    outputFirstAscent = DatabaseContract.ClimbLogEntry.FIRSTASCENT_FALSE;
+                    outputFirstAscent = DatabaseContract.FIRSTASCENT_FALSE;
                 }
 
 
@@ -148,7 +148,7 @@ public class AddClimb extends AppCompatActivity {
                         finish();
                     } else if (inputIntentCode == ADD_CLIMB_NEW) {
                         long writeResult = DatabaseReadWrite.writeClimbLogData(outputRouteName, outputLocationName, outputAscent, outputGradeName, outputGradeNumber, outputDate, outputFirstAscent, AddClimb.this);
-                        DatabaseReadWrite.writeCalendarUpdate(DatabaseContract.ClimbLogEntry.IS_CLIMB, outputDate, writeResult, AddClimb.this);
+                        DatabaseReadWrite.writeCalendarUpdate(DatabaseContract.IS_CLIMB, outputDate, writeResult, AddClimb.this);
                         Toast.makeText(getApplicationContext(), "New Row ID: " + String.valueOf(writeResult), Toast.LENGTH_SHORT).show();
                         finish();
                     }

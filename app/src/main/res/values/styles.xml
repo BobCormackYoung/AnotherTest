@@ -56,4 +56,9 @@
         <item name="android:inputType">textCapSentences</item>
     </style>
 
+    <style name="InfoButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
 </resources>

@@ -8,6 +8,16 @@ import android.provider.BaseColumns;
 
 public final class DatabaseContract {
 
+    public final static int IS_WORKOUT = 0;
+    public final static int IS_CLIMB = 1;
+    public final static int IS_GYMCLIMB = 2;
+    public final static int FIRSTASCENT_TRUE = 1;
+    public final static int FIRSTASCENT_FALSE = 0;
+    public final static int IS_COMPLETE = 1;
+    public final static int IS_INCOMPLETE = 0;
+    public final static int IS_TRUE = 1;
+    public final static int IS_FALSE = 0;
+
     private DatabaseContract() {}
 
     public static final class AscentEntry implements BaseColumns{
@@ -29,11 +39,6 @@ public final class DatabaseContract {
         public final static String COLUMN_DATE = "Date";
         public final static String COLUMN_ISCLIMB = "IsClimbCode";
         public final static String COLUMN_ROWID = "RowID";
-
-        public final static int IS_WORKOUT = 0;
-        public final static int IS_CLIMB = 1;
-        public final static int IS_GYMCLIMB = 2;
-
     }
 
     public final static class ClimbLogEntry implements BaseColumns{
@@ -50,12 +55,6 @@ public final class DatabaseContract {
         public final static String COLUMN_FIRSTASCENTCODE = "FirstAscentCode";
         public final static String COLUMN_ISCLIMB = "IsClimbCode";
 
-        public final static int IS_WORKOUT = 0;
-        public final static int IS_CLIMB = 1;
-        public final static int IS_GYMCLIMB = 2;
-
-        public final static int FIRSTASCENT_TRUE = 1;
-        public final static int FIRSTASCENT_FALSE = 0;
     }
 
     public final static class GradeListEntry implements BaseColumns{
@@ -97,13 +96,6 @@ public final class DatabaseContract {
         public final static String COLUMN_MOVECOUNT = "MoveCount";
         public final static String COLUMN_ISCOMPLETE = "IsComplete";
 
-        public final static int IS_WORKOUT = 0;
-        public final static int IS_CLIMB = 1;
-        public final static int IS_GYMCLIMB = 2;
-
-        public final static int IS_COMPLETE = 1;
-        public final static int IS_INCOMPLETE = 0;
-
     }
 
     public final static class WorkoutListEntry implements BaseColumns {
@@ -122,9 +114,6 @@ public final class DatabaseContract {
         public final static String COLUMN_ISRESTDURATIONPERSET = "IsRestDurationPerSet";
         public final static String COLUMN_ISGRADECODE = "IsGradeCode";
         public final static String COLUMN_ISMOVECOUNT = "IsMoveCount";
-
-        public final static int IS_TRUE = 1;
-        public final static int IS_FALSE = 0;
 
     }
 

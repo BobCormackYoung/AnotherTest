@@ -32,8 +32,8 @@ public class LogBookFragmentContent extends Fragment {
 
     private static final String KEY_DATE = "date";
     final long DAYPERIOD = 86400000;
-    final int ADD_CLIMB_NEW = 0;
-    final int ADD_CLIMB_EDIT = 1;
+    final int ITEM_NEW = 0;
+    final int ITEM_EDIT = 1;
     long fragmentDate;
     LogBookListAdapter adapter;
     Cursor cursor;
@@ -101,16 +101,22 @@ public class LogBookFragmentContent extends Fragment {
                     int isClimb = DatabaseReadWrite.getCalendarTrackerIsClimb(id, context);
 
                     // if it is a climb, then start a new intent for modifying the climb, if not, start for modifying training
-                    if (isClimb == DatabaseContract.ClimbLogEntry.IS_CLIMB) {
+                    if (isClimb == DatabaseContract.IS_CLIMB) {
                         Intent editClimbIntent = new Intent(context, AddClimb.class);
-                        editClimbIntent.putExtra("EditOrNewFlag", ADD_CLIMB_EDIT);
+                        editClimbIntent.putExtra("EditOrNewFlag", ITEM_EDIT);
                         editClimbIntent.putExtra("RowID", childRowID);
                         editClimbIntent.putExtra("Date", (long) fragmentDate);
                         // Start the new activity
-                        Log.i("TAG ME UP", "OnItemClick " + (int) id + " " + ADD_CLIMB_EDIT + " " + fragmentDate);
+                        Log.i("TAG ME UP", "OnItemClick " + (int) id + " " + ITEM_EDIT + " " + fragmentDate);
                         startActivity(editClimbIntent);
                     } else {
-                        // TODO: start intent to modify workout
+                        Intent editWorkoutIntent = new Intent(context, AddWorkout.class);
+                        editWorkoutIntent.putExtra("EditOrNewFlag", ITEM_EDIT);
+                        editWorkoutIntent.putExtra("RowID", childRowID);
+                        editWorkoutIntent.putExtra("Date", (long) fragmentDate);
+                        // Start the new activity
+                        Log.i("TAG ME UP", "OnItemClick " + (int) id + " " + ITEM_EDIT + " " + fragmentDate);
+                        startActivity(editWorkoutIntent);
                     }
                 }
             });
@@ -172,7 +178,7 @@ public class LogBookFragmentContent extends Fragment {
                 int childRowID = DatabaseReadWrite.getCalendarTrackerChildRowID(id, context);
                 int isClimb = DatabaseReadWrite.getCalendarTrackerIsClimb(id, context);
                 // if it is a climb, delete entry from the climb-log, if not a climb delete from the training log
-                if (isClimb == DatabaseContract.ClimbLogEntry.IS_CLIMB) {
+                if (isClimb == DatabaseContract.IS_CLIMB) {
                     String table = DatabaseContract.ClimbLogEntry.TABLE_NAME;
                     String whereClause = "_id=?";
                     String[] whereArgs = new String[]{String.valueOf(childRowID)};

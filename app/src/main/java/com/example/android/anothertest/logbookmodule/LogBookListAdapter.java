@@ -50,13 +50,13 @@ public class LogBookListAdapter extends CursorAdapter {
         // get the foreign key row ID
         int rowID = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID));
 
-        if (logTag == DatabaseContract.ClimbLogEntry.IS_CLIMB) {
+        if (logTag == DatabaseContract.IS_CLIMB) {
             Bundle bundle = DatabaseReadWrite.EditClimbLoadEntry(rowID, context);
 
             titleText = bundle.getString("outputRouteName");
             info1Text = bundle.getString("outputLocationName");
             int firstAscentCode = bundle.getInt("outputFirstAscent");
-            if (firstAscentCode == DatabaseContract.ClimbLogEntry.FIRSTASCENT_TRUE) {
+            if (firstAscentCode == DatabaseContract.FIRSTASCENT_TRUE) {
                 info3Text = "First Ascent";
             } else {
                 info3Text = "Repeat Ascent";
@@ -66,7 +66,7 @@ public class LogBookListAdapter extends CursorAdapter {
             int outputAscent = bundle.getInt("outputAscent");
             info2Text = DatabaseReadWrite.getAscentNameTextClimb(outputAscent, context);
 
-        } else if (logTag == DatabaseContract.WorkoutLogEntry.IS_WORKOUT) {
+        } else if (logTag == DatabaseContract.IS_WORKOUT) {
             Bundle bundle = DatabaseReadWrite.EditWorkoutLoadEntry(rowID, context);
             //Item is a training session, not a climb
             int workoutCode = bundle.getInt("outputWorkoutCode");
@@ -95,13 +95,13 @@ public class LogBookListAdapter extends CursorAdapter {
 
         //View textContainer = listItemView.findViewById(R.id.log_book_list_item_wrapper);
         TextView textContainer = (TextView) view.findViewById(R.id.log_book_list_item_icon);
-        if (logTag == DatabaseContract.ClimbLogEntry.IS_CLIMB) {
+        if (logTag == DatabaseContract.IS_CLIMB) {
             // Find the color that the resource ID maps to
             int color = ContextCompat.getColor(context, R.color.colorTrainingItems);
             // Set the background color of the text container View
             //textContainer.setBackgroundColor(color);
             textContainer.setTextColor(color);
-        } else if (logTag == DatabaseContract.WorkoutLogEntry.IS_WORKOUT) {
+        } else if (logTag == DatabaseContract.IS_WORKOUT) {
             // Find the color that the resource ID maps to
             int color = ContextCompat.getColor(context, R.color.colorClimbingItems);
             // Set the background color of the text container View

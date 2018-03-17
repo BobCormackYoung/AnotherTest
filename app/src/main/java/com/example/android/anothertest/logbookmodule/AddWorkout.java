@@ -30,16 +30,19 @@ public class AddWorkout extends AppCompatActivity {
     final double INCREMENT_WEIGHT_LARGE = 5; // 5 KG
     final int INCREMENT_COUNT_SMALL = 1; // set count
     final int INCREMENT_COUNT_LARGE = 5; // set count
-    int outputWorkoutNumber;
-    int outputWorkoutName;
+    int outputWorkoutNumber; // Workout number
+    int outputWorkoutName; // Workout name
     long outputDate = -1;
     int inputIntentCode = -1;
     int inputRowID = -1;
+
+    // Initialise counters
     double counterWeight = 0;
     int counterRestTime = 0;
     int counterRepCount = 1;
     int counterRepTime = 0;
     int counterSetCount = 1;
+    int counterMoveCount = 0;
 
     TextView titleWrapper; // Title wrapper
 
@@ -106,29 +109,48 @@ public class AddWorkout extends AppCompatActivity {
 
         mapViews();
 
-        workoutDateEditText.setText(TimeUtils.convertDate(outputDate, "yyyy-MM-dd"));
+        if (inputIntentCode == ADD_WORKOUT_NEW) {
 
-        workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
-        workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
-        workoutRepCountEditText.setText("" + counterRepCount);
-        workoutSetCountEditText.setText("" + counterSetCount);
-        workoutWeightEditText.setText("" + counterWeight + " Kg");
+            workoutDateEditText.setText(TimeUtils.convertDate(outputDate, "yyyy-MM-dd"));
 
-        // Weight Data Input Wrapper
-        workoutWeightWrapper.setVisibility(View.GONE);
-        // Set Count Input Wrapper
-        workoutSetCountWrapper.setVisibility(View.GONE);
-        // Rep Count Input Wrapper
-        workoutRepCountWrapper.setVisibility(View.GONE);
-        // Rep Duration Input Wrapper
-        workoutRepDurationWrapper.setVisibility(View.GONE);
-        // Rest Per Set Input Wrapper
-        workoutRestWrapper.setVisibility(View.GONE);
-        // Grade or Difficulty Input Wrapper
-        workoutGradeWrapper.setVisibility(View.GONE);
+            // Weight Data Input Wrapper
+            workoutWeightWrapper.setVisibility(View.GONE);
+            // Set Count Input Wrapper
+            workoutSetCountWrapper.setVisibility(View.GONE);
+            // Rep Count Input Wrapper
+            workoutRepCountWrapper.setVisibility(View.GONE);
+            // Rep Duration Input Wrapper
+            workoutRepDurationWrapper.setVisibility(View.GONE);
+            // Rest Per Set Input Wrapper
+            workoutRestWrapper.setVisibility(View.GONE);
+            // Grade or Difficulty Input Wrapper
+            workoutGradeWrapper.setVisibility(View.GONE);
+
+        } else if (inputIntentCode == ADD_WORKOUT_EDIT) {
+
+            // Get the workout entry information, update the view fields
+            Bundle workoutEntryBundle = DatabaseReadWrite.EditWorkoutLoadEntry(inputRowID, this);
+            outputWorkoutNumber = workoutEntryBundle.getInt("outputWorkoutCode");
+            outputWorkoutName = workoutEntryBundle.getInt("outputWorkoutTypeCode");
+            counterWeight = workoutEntryBundle.getDouble("outputWeight");
+            counterRestTime = workoutEntryBundle.getInt("outputRestDuration");
+            counterRepCount = workoutEntryBundle.getInt("outputRepCount");
+            counterRepTime = workoutEntryBundle.getInt("outputRepDuration");
+            counterSetCount = workoutEntryBundle.getInt("outputSetCount");
+            counterMoveCount = workoutEntryBundle.getInt("outputMoveCount");
+
+            // Get which fields should be shown
+            Bundle workoutFieldsBundle = DatabaseReadWrite.workoutLoadFields(outputWorkoutNumber, this);
+
+            // Display the data
+            workoutDateEditText.setText(TimeUtils.convertDate(outputDate, "yyyy-MM-dd"));
+            String outputStringWorkoutName = DatabaseReadWrite.getWorkoutTextClimb(outputWorkoutNumber, this);
+            String outputStringWorkoutType = DatabaseReadWrite.getWorkoutTypeClimb(outputWorkoutName, this);
+            workoutTrainingEditText.setText(outputStringWorkoutType + " | " + outputStringWorkoutName);
+            getTrainingInputFields(workoutFieldsBundle);
+        }
 
         onClickListenerInitiation();
-
 
     }
 
@@ -153,12 +175,12 @@ public class AddWorkout extends AppCompatActivity {
     }
 
     private void putWorkout(Intent inputData) {
-        // The user picked a grade, get the grade number
+        // The user picked a workout, get the workout name
         outputWorkoutNumber = inputData.getIntExtra("OutputWorkoutNumber", 0);
         String outputStringWorkoutName = DatabaseReadWrite.getWorkoutTextClimb(outputWorkoutNumber, this);
 
-        // The user picked a grade, get the grade number
-        // Put grade text date in the view
+        // The user picked a workout, get the workout type name
+        // Put workout text in the view
         outputWorkoutName = inputData.getIntExtra("OutputWorkoutName", 0);
         String outputStringWorkoutType = DatabaseReadWrite.getWorkoutTypeClimb(outputWorkoutName, this);
         workoutTrainingEditText.setText(outputStringWorkoutType + " | " + outputStringWorkoutName);
@@ -169,47 +191,54 @@ public class AddWorkout extends AppCompatActivity {
     }
 
     private void getTrainingInputFields(Bundle bundle) {
+
+        workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
+        workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
+        workoutRepCountEditText.setText("" + counterRepCount);
+        workoutSetCountEditText.setText("" + counterSetCount);
+        workoutWeightEditText.setText("" + counterWeight + " Kg");
+
         int outputIsClimb = bundle.getInt("outputIsClimb");
         //if (outputIsClimb == DatabaseContract.WorkoutListEntry.IS_TRUE) {
         //    workoutGradeWrapper.setVisibility(View.VISIBLE);
         //}
         int outputIsGradeCode = bundle.getInt("outputIsGradeCode");
-        if (outputIsGradeCode == DatabaseContract.WorkoutListEntry.IS_TRUE) {
+        if (outputIsGradeCode == DatabaseContract.IS_TRUE) {
             workoutGradeWrapper.setVisibility(View.VISIBLE);
         } else {
             workoutGradeWrapper.setVisibility(View.GONE);
         }
 
         int outputIsRepCountPerSet = bundle.getInt("outputIsRepCountPerSet");
-        if (outputIsRepCountPerSet == DatabaseContract.WorkoutListEntry.IS_TRUE) {
+        if (outputIsRepCountPerSet == DatabaseContract.IS_TRUE) {
             workoutRepCountWrapper.setVisibility(View.VISIBLE);
         } else {
             workoutRepCountWrapper.setVisibility(View.GONE);
         }
 
         int outputRepDurationPerSet = bundle.getInt("outputRepDurationPerSet");
-        if (outputRepDurationPerSet == DatabaseContract.WorkoutListEntry.IS_TRUE) {
+        if (outputRepDurationPerSet == DatabaseContract.IS_TRUE) {
             workoutRepDurationWrapper.setVisibility(View.VISIBLE);
         } else {
             workoutRepDurationWrapper.setVisibility(View.GONE);
         }
 
         int outputIsRestDuratonPerSet = bundle.getInt("outputIsRestDuratonPerSet");
-        if (outputIsRestDuratonPerSet == DatabaseContract.WorkoutListEntry.IS_TRUE) {
+        if (outputIsRestDuratonPerSet == DatabaseContract.IS_TRUE) {
             workoutRestWrapper.setVisibility(View.VISIBLE);
         } else {
             workoutRestWrapper.setVisibility(View.GONE);
         }
 
         int outputIsSetCount = bundle.getInt("outputIsSetCount");
-        if (outputIsSetCount == DatabaseContract.WorkoutListEntry.IS_TRUE) {
+        if (outputIsSetCount == DatabaseContract.IS_TRUE) {
             workoutSetCountWrapper.setVisibility(View.VISIBLE);
         } else {
             workoutSetCountWrapper.setVisibility(View.GONE);
         }
 
         int outputIsWeight = bundle.getInt("outputIsWeight");
-        if (outputIsWeight == DatabaseContract.WorkoutListEntry.IS_TRUE) {
+        if (outputIsWeight == DatabaseContract.IS_TRUE) {
             workoutWeightWrapper.setVisibility(View.VISIBLE);
         } else {
             workoutWeightWrapper.setVisibility(View.GONE);
@@ -286,7 +315,18 @@ public class AddWorkout extends AppCompatActivity {
         workoutTrainingEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickTraining();
+                if (inputIntentCode == ADD_WORKOUT_NEW) {
+                    // Only allow workout type to be changed if saving a new workout
+                    pickTraining();
+
+                    // Reset the counters when changing the workout
+                    counterWeight = 0;
+                    counterRestTime = 0;
+                    counterRepCount = 1;
+                    counterRepTime = 0;
+                    counterSetCount = 1;
+                    counterMoveCount = 0;
+                }
             }
         });
 
@@ -296,14 +336,21 @@ public class AddWorkout extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (outputWorkoutNumber != 0 && outputWorkoutName != 0) {
-                    long outputRow = DatabaseReadWrite.writeWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
-                            counterRepCount, counterRepTime, counterRestTime, 0, 0, 0, AddWorkout.this);
-                    DatabaseReadWrite.writeCalendarUpdate(DatabaseContract.WorkoutLogEntry.IS_WORKOUT, outputDate, outputRow, AddWorkout.this);
+                if (inputIntentCode == ADD_WORKOUT_NEW) {
+                    if (outputWorkoutNumber != 0 && outputWorkoutName != 0) {
+                        long outputRow = DatabaseReadWrite.writeWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
+                                counterRepCount, counterRepTime, counterRestTime, 0, 0, counterMoveCount, AddWorkout.this);
+                        DatabaseReadWrite.writeCalendarUpdate(DatabaseContract.IS_WORKOUT, outputDate, outputRow, AddWorkout.this);
+                        Toast.makeText(getApplicationContext(), "New Row ID: " + outputRow, Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No workout type selected", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (inputIntentCode == ADD_WORKOUT_EDIT) {
+                    long outputRow = DatabaseReadWrite.updateWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
+                            counterRepCount, counterRepTime, counterRestTime, 0, 0, counterMoveCount, inputRowID, AddWorkout.this);
                     Toast.makeText(getApplicationContext(), "New Row ID: " + outputRow, Toast.LENGTH_SHORT).show();
                     finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "No workout type selected", Toast.LENGTH_SHORT).show();
                 }
             }
         });

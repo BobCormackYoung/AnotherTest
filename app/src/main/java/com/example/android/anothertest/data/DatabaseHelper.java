@@ -1909,12 +1909,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Frankenjura");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         long writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         ContentValues values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, currentDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -1927,12 +1927,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Flatanger");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, currentDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -1946,12 +1946,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Arco");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayTwoDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -1964,12 +1964,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Domusnovas");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayTwoDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -1983,12 +1983,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Villanueva del Rosario");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayThreeDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -2001,12 +2001,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Oliana");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayThreeDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -2020,12 +2020,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Stanage");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFourDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -2038,12 +2038,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Siurana");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFourDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -2057,12 +2057,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "La Cova de l'Ocell");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFiveDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -2075,12 +2075,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ClimbLogEntry.COLUMN_ASCENTTYPECODE, 1);
         values.put(ClimbLogEntry.COLUMN_LOCATION, "Margalef");
         values.put(ClimbLogEntry.COLUMN_FIRSTASCENTCODE, 1);
-        values.put(ClimbLogEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values.put(ClimbLogEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         writeResult = db.insert(ClimbLogEntry.TABLE_NAME, null, values);
         values.clear();
         values2 = new ContentValues();
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE, dayFiveDate);
-        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, ClimbLogEntry.IS_CLIMB);
+        values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB, DatabaseContract.IS_CLIMB);
         values2.put(DatabaseContract.CalendarTrackerEntry.COLUMN_ROWID, writeResult);
         db.insert(DatabaseContract.CalendarTrackerEntry.TABLE_NAME, null, values2);
         values2.clear();
@@ -2127,14 +2127,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Pull-Ups"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2142,14 +2142,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Squats"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Integer
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Integer
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Integer
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Integer
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Integer
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Integer
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Integer
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Integer
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2157,14 +2157,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Push-Ups"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2172,14 +2172,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Shoulder Press"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 1); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2187,14 +2187,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Random Endurance Workout"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2202,14 +2202,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Plank"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 3); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2217,14 +2217,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Front Lever"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 3); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2232,14 +2232,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Sit-Up"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 3); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2247,14 +2247,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "90deg Bent-Arm Hang"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 4); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2262,14 +2262,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_NAME, "Custom Something"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 5); // Integer
         values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, WorkoutListEntry.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, WorkoutListEntry.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, WorkoutListEntry.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
