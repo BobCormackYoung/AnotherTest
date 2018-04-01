@@ -17,6 +17,7 @@ public class TimeUtils {
     public static final Calendar FIRST_DAY_OF_TIME;
     public static final Calendar LAST_DAY_OF_TIME;
     public static final int DAYS_OF_TIME;
+    public static final int MONTHS_OF_TIME;
 
     static {
         FIRST_DAY_OF_TIME = Calendar.getInstance();
@@ -24,6 +25,7 @@ public class TimeUtils {
         LAST_DAY_OF_TIME = Calendar.getInstance();
         LAST_DAY_OF_TIME.set(2150, Calendar.DECEMBER, 31);
         DAYS_OF_TIME = 73413; //(int) ((LAST_DAY_OF_TIME.getTimeInMillis() - FIRST_DAY_OF_TIME.getTimeInMillis()) / (24 * 60 * 60 * 1000));
+        MONTHS_OF_TIME = 12 * (LAST_DAY_OF_TIME.get(Calendar.YEAR) - FIRST_DAY_OF_TIME.get(Calendar.YEAR));
     }
 
     /**
@@ -37,6 +39,19 @@ public class TimeUtils {
             return (int) ((day.getTimeInMillis() - FIRST_DAY_OF_TIME.getTimeInMillis())
                     / 86400000  //(24 * 60 * 60 * 1000)
             );
+        }
+        return 0;
+    }
+
+    /**
+     * Get the position in the ViewPager for a given month
+     *
+     * @param day
+     * @return the position or 0 if month is null
+     */
+    public static int getPositionForMonth(Calendar day) {
+        if (day != null) {
+            return day.get(Calendar.MONTH) + 12 * (day.get(Calendar.YEAR) - FIRST_DAY_OF_TIME.get(Calendar.YEAR));
         }
         return 0;
     }

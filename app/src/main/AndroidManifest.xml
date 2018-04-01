@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CalendarOverview" />
+        <activity android:name=".calendarmodule.CalendarOverview" />
         <activity android:name=".logbookmodule.LogBook" />
         <activity android:name=".logbookmodule.AddClimb" />
         <activity android:name=".logbookmodule.gradepicker.ChildGradeHolder" />
