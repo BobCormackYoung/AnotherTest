@@ -11,6 +11,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.android.anothertest.R;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +22,9 @@ public class CalendarFragmentContent extends Fragment {
     int fragmentMonthOffset;
     int flagToday;
     int flagThisMonth;
+    int flagClimb;
+    int flagWorkout;
+    int flagWorkoutClimb;
 
     public static CalendarFragmentContent newInstance(int month_offset) {
         CalendarFragmentContent fragmentFirst = new CalendarFragmentContent();
@@ -99,7 +103,30 @@ public class CalendarFragmentContent extends Fragment {
                     flagThisMonth = 0;
                 }
 
-                monthDays.add(new MonthDays(mCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0, flagToday, flagThisMonth));
+                int climbCount = DatabaseReadWrite.getClimbCount(mCalendar, context);
+                int workoutCount = DatabaseReadWrite.getWorkoutCount(mCalendar, context);
+                int workoutClimbCount = DatabaseReadWrite.getWorkoutClimbCount(mCalendar, context);
+
+                if (climbCount != 0) {
+                    flagClimb = 1;
+                } else {
+                    flagClimb = 0;
+                }
+
+                if (workoutCount != 0) {
+                    flagWorkout = 1;
+                } else {
+                    flagWorkout = 0;
+                }
+
+                if (workoutClimbCount != 0) {
+                    flagWorkoutClimb = 1;
+                } else {
+                    flagWorkoutClimb = 0;
+                }
+
+
+                monthDays.add(new MonthDays(mCalendar.get(Calendar.DAY_OF_MONTH), flagClimb, flagWorkout, flagWorkoutClimb, flagToday, flagThisMonth));
                 //step to next day
                 mCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }

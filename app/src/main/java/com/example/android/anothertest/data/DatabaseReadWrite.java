@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import java.util.Calendar;
+
 import static com.example.android.anothertest.util.TimeUtils.convertDate;
 
 /**
@@ -886,6 +888,148 @@ public class DatabaseReadWrite {
                 null);
 
         return cursor;
+    }
+
+    /**
+     * Method for outputting the count of climbs in the database
+     *
+     * @param day      a calendar pointing at the particular day
+     * @param mContext context
+     * @return int, the count for that date
+     */
+    public static int getClimbCount(Calendar day, Context mContext) {
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        int dayLength = 86400000 - 2;
+
+        day.set(Calendar.HOUR, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 1);
+
+        long dayStart = day.getTimeInMillis();
+        long dayEnd = dayStart + dayLength;
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.CalendarTrackerEntry._ID,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_DATE,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB};
+        String whereClause = DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB + "=? AND " + DatabaseContract.CalendarTrackerEntry.COLUMN_DATE + " BETWEEN ? AND ?";
+        String[] whereValue = {String.valueOf(DatabaseContract.IS_CLIMB), String.valueOf(dayStart), String.valueOf(dayEnd)};
+
+        Cursor cursor = database.query(DatabaseContract.CalendarTrackerEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int output = cursor.getCount();
+
+        try {
+            return output;
+        } finally {
+            cursor.close();
+            database.close();
+            handler.close();
+        }
+    }
+
+    /**
+     * Method for outputting the count of workouts in the database
+     *
+     * @param day      a calendar pointing at the particular day
+     * @param mContext context
+     * @return int, the count for that date
+     */
+    public static int getWorkoutCount(Calendar day, Context mContext) {
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+        int dayLength = 86400000 - 2;
+
+        day.set(Calendar.HOUR, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 1);
+
+        long dayStart = day.getTimeInMillis();
+        long dayEnd = dayStart + dayLength;
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.CalendarTrackerEntry._ID,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_DATE,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB};
+        String whereClause = DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB + "=? AND " + DatabaseContract.CalendarTrackerEntry.COLUMN_DATE + " BETWEEN ? AND ?";
+        String[] whereValue = {String.valueOf(DatabaseContract.IS_WORKOUT), String.valueOf(dayStart), String.valueOf(dayEnd)};
+
+        Cursor cursor = database.query(DatabaseContract.CalendarTrackerEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int output = cursor.getCount();
+
+        try {
+            return output;
+        } finally {
+            cursor.close();
+            database.close();
+            handler.close();
+        }
+    }
+
+    /**
+     * Method for outputting the count of workout climbs in the database
+     *
+     * @param day      a calendar pointing at the particular day
+     * @param mContext context
+     * @return int, the count for that date
+     */
+    public static int getWorkoutClimbCount(Calendar day, Context mContext) {
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        int dayLength = 86400000 - 2;
+
+        day.set(Calendar.HOUR, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 1);
+
+        long dayStart = day.getTimeInMillis();
+        long dayEnd = dayStart + dayLength;
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.CalendarTrackerEntry._ID,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_DATE,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB};
+        String whereClause = DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB + "=? AND " + DatabaseContract.CalendarTrackerEntry.COLUMN_DATE + " BETWEEN ? AND ?";
+        String[] whereValue = {String.valueOf(DatabaseContract.IS_GYMCLIMB), String.valueOf(dayStart), String.valueOf(dayEnd)};
+        Cursor cursor = database.query(DatabaseContract.CalendarTrackerEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int output = cursor.getCount();
+
+        try {
+            return output;
+        } finally {
+            cursor.close();
+            database.close();
+            handler.close();
+        }
     }
 }
 

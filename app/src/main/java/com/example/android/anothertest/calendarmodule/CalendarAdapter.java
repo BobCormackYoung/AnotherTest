@@ -39,6 +39,10 @@ public class CalendarAdapter extends ArrayAdapter<MonthDays> {
         TextView nameTextView = (TextView) convertView.findViewById(R.id.tv_daynumber);
         nameTextView.setText("" + monthDay.getDate());
 
+        TextView climbTextView = (TextView) convertView.findViewById(R.id.calendar_climb_symbol);
+        TextView workoutTextView = (TextView) convertView.findViewById(R.id.calendar_workout_symbol);
+        TextView workoutClimbTextView = (TextView) convertView.findViewById(R.id.calendar_workoutclimb_symbol);
+
         if (monthDay.getFlagCurrentDay() == 1) {
             //nameTextView.setTypeface(Typeface.DEFAULT, 1);
             int color = ContextCompat.getColor(mContext, R.color.colorAccent);
@@ -47,6 +51,24 @@ public class CalendarAdapter extends ArrayAdapter<MonthDays> {
 
         if (monthDay.getFlagCurrentMonth() == 0) {
             nameTextView.setTypeface(Typeface.DEFAULT, 2);
+        }
+
+        if (monthDay.getFlagClimbing() == 0) {
+            climbTextView.setVisibility(View.GONE);
+        } else {
+            climbTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (monthDay.getFlagWorkout() == 0) {
+            workoutTextView.setVisibility(View.GONE);
+        } else {
+            workoutTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (monthDay.getFlagWorkoutClimb() == 0) {
+            workoutClimbTextView.setVisibility(View.GONE);
+        } else {
+            workoutClimbTextView.setVisibility(View.VISIBLE);
         }
 
         return convertView;
