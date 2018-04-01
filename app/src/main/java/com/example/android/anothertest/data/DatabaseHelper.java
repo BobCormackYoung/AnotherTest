@@ -2090,31 +2090,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Strength");
-        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Gym-based exercises performed to increase your strength, i.e. pull-ups, tricep-dips, squats.");
         db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
 
         values.clear();
         values = new ContentValues();
-        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Endurance");
-        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Climbing-gym");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Exercises done at the climbing gym, i.e. traverses, lead-climbs, boulders, series.");
         db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
 
         values.clear();
         values = new ContentValues();
         values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Core");
-        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Gym-based exercises performed to increase core-body strength, i.e. planks, leg-raises, sit-ups.");
         db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
 
         values.clear();
         values = new ContentValues();
         values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Hangboard");
-        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Hangboard/Fingerboard exercises for increase finger/crimp strength, i.e. frenchies, 45deg finger-tip hangs, 120deg sloper-hangs.");
+        db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Campus");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Campus exercises for increase finger/crimp and upper-body strength, i.e. 1-4-3-4 finger-tips, 1-5-9 slopers.");
         db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
 
         values.clear();
         values = new ContentValues();
         values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Custom");
-        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Description");
+        values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Any user-created custom exercises.");
         db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
 
     }
