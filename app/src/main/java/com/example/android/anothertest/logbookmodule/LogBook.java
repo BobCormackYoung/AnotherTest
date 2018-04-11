@@ -9,11 +9,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.anothertest.R;
 import com.example.android.anothertest.util.TimeUtils;
 
 import java.util.Calendar;
+
+//TODO: Still appears to be a bug when calling position of pager adapter for specific date
 
 public class LogBook extends FragmentActivity {
 
@@ -32,7 +35,9 @@ public class LogBook extends FragmentActivity {
         mContext = this;
 
         // Set header date to current date
-        long outputDate = Calendar.getInstance().getTimeInMillis();
+        //Calendar currentDate = TimeUtils.FIRST_DAY_OF_TIME;
+        Calendar currentDate = Calendar.getInstance();
+        long outputDate = currentDate.getTimeInMillis();
         TextView header = findViewById(R.id.textview_date);
         header.setText(TimeUtils.convertDate(outputDate, "yyyy-MM-dd"));
 
@@ -42,7 +47,8 @@ public class LogBook extends FragmentActivity {
         vpPager.setAdapter(adapterViewPager);
 
         // Set pager to current date
-        vpPager.setCurrentItem(TimeUtils.getPositionForDay(Calendar.getInstance()));
+        vpPager.setCurrentItem(TimeUtils.getPositionForDay(currentDate));
+        Toast.makeText(getApplicationContext(), "Position = " + TimeUtils.getPositionForDay(currentDate), Toast.LENGTH_SHORT).show();
 
         // Set PageChangeListener
         vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -57,6 +63,7 @@ public class LogBook extends FragmentActivity {
                 Calendar cal = TimeUtils.getDayForPosition(position);
                 TextView header = findViewById(R.id.textview_date);
                 header.setText(TimeUtils.getFormattedDate(mContext, cal.getTimeInMillis()));
+                Toast.makeText(getApplicationContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override

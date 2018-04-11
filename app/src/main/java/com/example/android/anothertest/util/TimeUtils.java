@@ -2,6 +2,7 @@ package com.example.android.anothertest.util;
 
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import com.example.android.anothertest.R;
 
@@ -19,13 +20,19 @@ public class TimeUtils {
     public static final int DAYS_OF_TIME;
     public static final int MONTHS_OF_TIME;
 
+    //public static final int TEST;
+
     static {
         FIRST_DAY_OF_TIME = Calendar.getInstance();
-        FIRST_DAY_OF_TIME.set(1950, Calendar.JANUARY, 1);
+        FIRST_DAY_OF_TIME.set(Calendar.MILLISECOND, 1);
+        FIRST_DAY_OF_TIME.set(1950, Calendar.JANUARY, 1, 0, 0, 0);
         LAST_DAY_OF_TIME = Calendar.getInstance();
-        LAST_DAY_OF_TIME.set(2150, Calendar.DECEMBER, 31);
-        DAYS_OF_TIME = 73413; //(int) ((LAST_DAY_OF_TIME.getTimeInMillis() - FIRST_DAY_OF_TIME.getTimeInMillis()) / (24 * 60 * 60 * 1000));
+        LAST_DAY_OF_TIME.set(Calendar.MILLISECOND, 1);
+        LAST_DAY_OF_TIME.set(2150, Calendar.DECEMBER, 31, 0, 0, 0);
+        DAYS_OF_TIME = (int) ((LAST_DAY_OF_TIME.getTimeInMillis() - FIRST_DAY_OF_TIME.getTimeInMillis()) / (24 * 60 * 60 * 1000)); //73413
         MONTHS_OF_TIME = 12 * (LAST_DAY_OF_TIME.get(Calendar.YEAR) - FIRST_DAY_OF_TIME.get(Calendar.YEAR));
+
+        Log.i("TimeUtils", "DAYS_OF_TIME: " + DAYS_OF_TIME);
     }
 
     /**
@@ -36,9 +43,15 @@ public class TimeUtils {
      */
     public static int getPositionForDay(Calendar day) {
         if (day != null) {
-            return (int) ((day.getTimeInMillis() - FIRST_DAY_OF_TIME.getTimeInMillis())
-                    / 86400000  //(24 * 60 * 60 * 1000)
-            );
+            day.set(Calendar.HOUR_OF_DAY, 0);
+            day.set(Calendar.MINUTE, 0);
+            day.set(Calendar.SECOND, 0);
+            day.set(Calendar.MILLISECOND, 1);
+
+            int position = (int) ((day.getTimeInMillis() - FIRST_DAY_OF_TIME.getTimeInMillis()) / 86400000 + 1);
+            Log.i("getPositionForDay", "P: " + position + ", D: " + convertDate(day.getTimeInMillis(), "yyyy-MM-dd"));
+
+            return (position);
         }
         return 0;
     }
@@ -70,6 +83,10 @@ public class TimeUtils {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(FIRST_DAY_OF_TIME.getTimeInMillis());
         cal.add(Calendar.DAY_OF_YEAR, position);
+        cal.add(Calendar.MILLISECOND, (int) millisToStartOfDay());
+
+        Log.i("getDayForPosition", "P: " + position + ", D: " + convertDate(cal.getTimeInMillis(), "yyyy-MM-dd"));
+
         return cal;
     }
 
