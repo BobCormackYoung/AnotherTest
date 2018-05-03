@@ -29,11 +29,13 @@ public class CalendarGridAdapter extends ArrayAdapter<Date> {
     CalendarGridAdapter(Context context, CalendarProperties calendarProperties, ArrayList<Date> dates, int month) {
         super(context, calendarProperties.getItemLayoutResource(), dates);
 
-        //Log.i(LOG_TAG,"in constructor");
-
-
         mCalendarProperties = calendarProperties;
-        mMonth = month < 0 ? 11 : month;
+        if (month < 0) {
+            mMonth = 11; //December = is month -1
+        } else {
+            mMonth = month; //all other months are correct
+        }
+        //mMonth = month < 0 ? 11 : month;
         mLayoutInflater = LayoutInflater.from(context);
 
         if (LOG_SWITCH == 1) {
