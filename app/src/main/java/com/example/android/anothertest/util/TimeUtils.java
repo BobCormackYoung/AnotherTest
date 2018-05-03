@@ -124,6 +124,22 @@ public class TimeUtils {
         return simpleDateFormat.format(new Date(date));
     }
 
+    public static Calendar getCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        setMidnight(calendar);
+
+        return calendar;
+    }
+
+    public static void setMidnight(Calendar calendar) {
+        if (calendar != null) {
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+        }
+    }
+
 
 }
 
