@@ -1,28 +1,26 @@
 package com.example.android.anothertest.calendarmodule;
 
+import java.util.Date;
+
 /**
  * Created by Bobek on 27/03/2018.
  */
 
 public class MonthDays {
 
-    private int mDate;
+    private Date mDate;
     private int mFlagClimbing;
     private int mFlagWorkout;
     private int mFlagWorkoutClimb;
-    private int mFlagCurrentDay;
-    private int mFlagCurrentMonth;
 
-    public MonthDays(int date, int flagClimbing, int flagWorkout, int flagWorkoutClimb, int flagCurrentDay, int flagCurrentMonth) {
+    public MonthDays(Date date, int flagClimbing, int flagWorkout, int flagWorkoutClimb) {
         mDate = date;
         mFlagClimbing = flagClimbing;
         mFlagWorkout = flagWorkout;
         mFlagWorkoutClimb = flagWorkoutClimb;
-        mFlagCurrentDay = flagCurrentDay;
-        mFlagCurrentMonth = flagCurrentMonth;
     }
 
-    public int getDate() {
+    public Date getDate() {
         return mDate;
     }
 
@@ -36,14 +34,6 @@ public class MonthDays {
 
     public int getFlagWorkoutClimb() {
         return mFlagWorkoutClimb;
-    }
-
-    public int getFlagCurrentDay() {
-        return mFlagCurrentDay;
-    }
-
-    public int getFlagCurrentMonth() {
-        return mFlagCurrentMonth;
     }
 
 }

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.example.android.anothertest.util.TimeUtils.convertDate;
@@ -15,6 +17,9 @@ import static com.example.android.anothertest.util.TimeUtils.convertDate;
  */
 
 public class DatabaseReadWrite {
+
+    private final static String LOG_TAG = "DatabaseReadWrite";
+    private final static int LOG_TRIGGER = 1;
 
     /**
      * Get the position in the ViewPager for a given day
@@ -1031,6 +1036,207 @@ public class DatabaseReadWrite {
             handler.close();
         }
     }
+
+    /**
+     * Method for outputting a list of days with climb data
+     *
+     * @param day
+     * @param mContext
+     * @return
+     */
+    public static ArrayList<Integer> getClimbMonthCount(Calendar day, Context mContext) {
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        long dayLength = 86400000;
+
+        day.set(Calendar.HOUR, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 0);
+
+        long monthStart = day.getTimeInMillis();
+        long monthEnd = monthStart + dayLength * 42;
+        //Log.i(LOG_TAG, "Month Start: " + monthStart + " | Month End: " + monthEnd);
+
+        ArrayList<Integer> eventsList = new ArrayList<>(42);
+        for (int i = 0; i < 42; i++) {
+            eventsList.add(0);
+        }
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.CalendarTrackerEntry._ID,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_DATE,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB};
+        String whereClause = DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB + "=? AND " + DatabaseContract.CalendarTrackerEntry.COLUMN_DATE + " BETWEEN ? AND ?";
+        String[] whereValue = {String.valueOf(DatabaseContract.IS_CLIMB), String.valueOf(monthStart), String.valueOf(monthEnd)};
+
+        Cursor cursor = database.query(DatabaseContract.CalendarTrackerEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE);
+
+        int cursorCount = cursor.getCount();
+        //Log.i(LOG_TAG, "idColumnOutput: " + idColumnOutput + " | cursorCount: " + cursorCount);
+
+        if (cursorCount != 0) {
+            //cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                long outputDate = cursor.getLong(idColumnOutput);
+                long outputDay = (outputDate - monthStart) / dayLength;
+                //Log.i(LOG_TAG, "outputDate: " + outputDate + " | outputDay: " + outputDay);
+                eventsList.set((int) outputDay, 1);
+            }
+        }
+
+        try {
+            return eventsList;
+        } finally {
+            cursor.close();
+            database.close();
+            handler.close();
+        }
+    }
+
+    /**
+     * Method for outputting a list of days with workout data
+     *
+     * @param day
+     * @param mContext
+     * @return
+     */
+    public static ArrayList<Integer> getWorkoutMonthCount(Calendar day, Context mContext) {
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        long dayLength = 86400000;
+
+        day.set(Calendar.HOUR, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 0);
+
+        long monthStart = day.getTimeInMillis();
+        long monthEnd = monthStart + dayLength * 42;
+        Log.i(LOG_TAG, "Month Start: " + monthStart + " | Month End: " + monthEnd);
+
+        ArrayList<Integer> eventsList = new ArrayList<>(42);
+        for (int i = 0; i < 42; i++) {
+            eventsList.add(0);
+        }
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.CalendarTrackerEntry._ID,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_DATE,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB};
+        String whereClause = DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB + "=? AND " + DatabaseContract.CalendarTrackerEntry.COLUMN_DATE + " BETWEEN ? AND ?";
+        String[] whereValue = {String.valueOf(DatabaseContract.IS_WORKOUT), String.valueOf(monthStart), String.valueOf(monthEnd)};
+
+        Cursor cursor = database.query(DatabaseContract.CalendarTrackerEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE);
+
+        int cursorCount = cursor.getCount();
+        Log.i(LOG_TAG, "idColumnOutput: " + idColumnOutput + " | cursorCount: " + cursorCount);
+
+        if (cursorCount != 0) {
+            //cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                long outputDate = cursor.getLong(idColumnOutput);
+                long outputDay = (outputDate - monthStart) / dayLength;
+                Log.i(LOG_TAG, "outputDate: " + outputDate + " | outputDay: " + outputDay);
+                eventsList.set((int) outputDay, 1);
+            }
+        }
+
+        try {
+            return eventsList;
+        } finally {
+            cursor.close();
+            database.close();
+            handler.close();
+        }
+    }
+
+    /**
+     * Method for outputting a list of days with workout climb data
+     *
+     * @param day
+     * @param mContext
+     * @return
+     */
+    public static ArrayList<Integer> getWorkoutClimbMonthCount(Calendar day, Context mContext) {
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        long dayLength = 86400000;
+
+        day.set(Calendar.HOUR, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 0);
+
+        long monthStart = day.getTimeInMillis();
+        long monthEnd = monthStart + dayLength * 42;
+        Log.i(LOG_TAG, "Month Start: " + monthStart + " | Month End: " + monthEnd);
+
+        ArrayList<Integer> eventsList = new ArrayList<>(42);
+        for (int i = 0; i < 42; i++) {
+            eventsList.add(0);
+        }
+
+        //grade type
+        String[] projection = {
+                DatabaseContract.CalendarTrackerEntry._ID,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_DATE,
+                DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB};
+        String whereClause = DatabaseContract.CalendarTrackerEntry.COLUMN_ISCLIMB + "=? AND " + DatabaseContract.CalendarTrackerEntry.COLUMN_DATE + " BETWEEN ? AND ?";
+        String[] whereValue = {String.valueOf(DatabaseContract.IS_GYMCLIMB), String.valueOf(monthStart), String.valueOf(monthEnd)};
+        Cursor cursor = database.query(DatabaseContract.CalendarTrackerEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.CalendarTrackerEntry.COLUMN_DATE);
+
+        int cursorCount = cursor.getCount();
+        Log.i(LOG_TAG, "idColumnOutput: " + idColumnOutput + " | cursorCount: " + cursorCount);
+
+        if (cursorCount != 0) {
+            //cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                long outputDate = cursor.getLong(idColumnOutput);
+                long outputDay = (outputDate - monthStart) / dayLength;
+                Log.i(LOG_TAG, "outputDate: " + outputDate + " | outputDay: " + outputDay);
+                eventsList.set((int) outputDay, 1);
+            }
+        }
+
+        try {
+            return eventsList;
+        } finally {
+            cursor.close();
+            database.close();
+            handler.close();
+        }
+    }
+
 }
 
 

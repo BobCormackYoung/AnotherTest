@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.example.android.anothertest.R;
+import com.example.android.anothertest.data.DatabaseReadWrite;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +67,7 @@ public class CalendarPagerAdapter extends PagerAdapter {
     }
 
     public void loadMonth(int position) {
-        ArrayList<Date> days = new ArrayList<>();
+        ArrayList<MonthDays> monthDays = new ArrayList<MonthDays>();
 
         // Get Calendar object instance
         Calendar calendar = (Calendar) mCalendarProperties.getCurrentDate().clone();
@@ -87,13 +88,25 @@ public class CalendarPagerAdapter extends PagerAdapter {
         // Subtract a number of beginning days, it will let to load a part of a previous month
         calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
 
+        // Get the eventslist for the current month
+        ArrayList<Integer> eventsListClimb = DatabaseReadWrite.getClimbMonthCount(calendar, mContext);
+        ArrayList<Integer> eventsListWorkout = DatabaseReadWrite.getWorkoutMonthCount(calendar, mContext);
+        ArrayList<Integer> eventsListWorkoutClimb = DatabaseReadWrite.getWorkoutClimbMonthCount(calendar, mContext);
+
         /*
         Get all days of one page (42 is a number of all possible cells in one page
         (a part of previous month, current month and a part of next month))
          */
-        while (days.size() < 42) {
-            days.add(calendar.getTime());
+        int i = 0;
+        while (monthDays.size() < 42) {
+            int climbCount = eventsListClimb.get(i); //DatabaseReadWrite.getClimbCount(calendar, mContext);
+            int workoutCount = eventsListWorkout.get(i); //DatabaseReadWrite.getWorkoutCount(calendar, mContext);
+            int workoutClimbCount = eventsListWorkoutClimb.get(i); //DatabaseReadWrite.getWorkoutClimbCount(calendar, mContext);
+            Date date = calendar.getTime();
+
+            monthDays.add(new MonthDays(date, climbCount, workoutCount, workoutClimbCount));
             calendar.add(Calendar.DAY_OF_MONTH, 1);
+            i++;
         }
 
         if (LOG_SWITCH == 1) {
@@ -105,7 +118,7 @@ public class CalendarPagerAdapter extends PagerAdapter {
             Log.i(LOG_TAG, "adapter current date: " + convertDate(debugCurrentDate2, "dd-MM-yyyy"));
         }
 
-        CalendarGridAdapter calendarGridAdapter = new CalendarGridAdapter(mContext, mCalendarProperties, days, calendar.get(Calendar.MONTH) - 1);
+        CalendarGridAdapter calendarGridAdapter = new CalendarGridAdapter(mContext, mCalendarProperties, monthDays, calendar.get(Calendar.MONTH) - 1);
 
         mGridView.setAdapter(calendarGridAdapter);
     }

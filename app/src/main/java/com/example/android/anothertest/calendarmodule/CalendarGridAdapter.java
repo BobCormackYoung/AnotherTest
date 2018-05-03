@@ -14,10 +14,9 @@ import com.example.android.anothertest.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class CalendarGridAdapter extends ArrayAdapter<Date> {
+public class CalendarGridAdapter extends ArrayAdapter<MonthDays> {
 
     private final String LOG_TAG = getClass().getSimpleName();
     private final int LOG_SWITCH = 1; //1=log, 0=no log
@@ -26,7 +25,7 @@ public class CalendarGridAdapter extends ArrayAdapter<Date> {
     private int mMonth;
     private CalendarProperties mCalendarProperties;
 
-    CalendarGridAdapter(Context context, CalendarProperties calendarProperties, ArrayList<Date> dates, int month) {
+    CalendarGridAdapter(Context context, CalendarProperties calendarProperties, ArrayList<MonthDays> dates, int month) {
         super(context, calendarProperties.getItemLayoutResource(), dates);
 
         mCalendarProperties = calendarProperties;
@@ -53,10 +52,15 @@ public class CalendarGridAdapter extends ArrayAdapter<Date> {
             view = mLayoutInflater.inflate(mCalendarProperties.getItemLayoutResource(), parent, false);
         }
 
+        MonthDays monthDay = getItem(position);
+
         TextView dayLabel = (TextView) view.findViewById(R.id.tv_daynumber);
+        TextView climbTextView = (TextView) view.findViewById(R.id.calendar_climb_symbol);
+        TextView workoutTextView = (TextView) view.findViewById(R.id.calendar_workout_symbol);
+        TextView workoutClimbTextView = (TextView) view.findViewById(R.id.calendar_workoutclimb_symbol);
 
         Calendar day = new GregorianCalendar();
-        day.setTime(getItem(position));
+        day.setTime(monthDay.getDate());
 
         dayLabel.setText(String.valueOf(day.get(Calendar.DAY_OF_MONTH)));
 
@@ -64,6 +68,24 @@ public class CalendarGridAdapter extends ArrayAdapter<Date> {
             dayLabel.setTypeface(Typeface.DEFAULT, 0);
         } else {
             dayLabel.setTypeface(Typeface.DEFAULT, 2);
+        }
+
+        if (monthDay.getFlagClimbing() == 0) {
+            climbTextView.setVisibility(View.GONE);
+        } else {
+            climbTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (monthDay.getFlagWorkout() == 0) {
+            workoutTextView.setVisibility(View.GONE);
+        } else {
+            workoutTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (monthDay.getFlagWorkoutClimb() == 0) {
+            workoutClimbTextView.setVisibility(View.GONE);
+        } else {
+            workoutClimbTextView.setVisibility(View.VISIBLE);
         }
 
         return view;
