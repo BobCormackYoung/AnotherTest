@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,10 +62,12 @@ public class LogBookListAdapter extends CursorAdapter {
             } else {
                 info3Text = "Repeat Ascent";
             }
-            int gradeCode = bundle.getInt("outputGradeName");
+            int gradeCode = bundle.getInt("outputGradeNumber");
             gradeText = DatabaseReadWrite.getGradeTextClimb(gradeCode, context);
             int outputAscent = bundle.getInt("outputAscent");
             info2Text = DatabaseReadWrite.getAscentNameTextClimb(outputAscent, context);
+            Log.i("LogBookListAdapter", "Route Name: " + titleText + " | GradeCode: " + gradeCode + " | GradeText: " + gradeText);
+
 
         } else if (logTag == DatabaseContract.IS_WORKOUT) {
             Bundle bundle = DatabaseReadWrite.EditWorkoutLoadEntry(rowID, context);
