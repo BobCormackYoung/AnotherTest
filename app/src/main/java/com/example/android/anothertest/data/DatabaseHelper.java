@@ -1780,6 +1780,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, maxSubjectiveDifficulty);
         db.insert(GradeListEntry.TABLE_NAME, null, values);
 
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 10);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "3");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, 4);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeListEntry.COLUMN_GRADETYPECODE, 11);
+        values.put(GradeListEntry.COLUMN_GRADENAME, "3");
+        values.put(GradeListEntry.COLUMN_RELATIVEDIFFICULTY, 4);
+        db.insert(GradeListEntry.TABLE_NAME, null, values);
+
         Log.v(LOG_TAG, "Database Initial Fill Method Run");
     }
 
@@ -1836,6 +1850,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.clear();
         values = new ContentValues();
         values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "Subjective Grade");
+        db.insert(GradeTypeEntry.TABLE_NAME, null, values);
+
+        //10
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "Polish (Krakowska)");
+        db.insert(GradeTypeEntry.TABLE_NAME, null, values);
+
+        //11
+        values.clear();
+        values = new ContentValues();
+        values.put(GradeTypeEntry.COLUMN_GRADETYPENAME, "Polish (Tatrzańska)");
         db.insert(GradeTypeEntry.TABLE_NAME, null, values);
 
     }

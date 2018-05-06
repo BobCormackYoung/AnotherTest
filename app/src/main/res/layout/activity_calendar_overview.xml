@@ -6,23 +6,49 @@
     tools:context=".calendarmodule.CalendarOverview"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_position"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="PageView Position Info" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cal_button_previous_day"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="0"
+            android:text="B"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cal_textview_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            tools:text="Title Text" />
+
+        <Button
+            android:id="@+id/cal_button_next_day"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="0"
+            android:text="F"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_month"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="PageView Month-Year Info" />
-
-    <TextView
-        android:id="@+id/tv_other"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="PageView Other Info" />
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="4dp"
+        android:background="@color/colorPrimaryDark" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,56 +60,76 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="M" />
+            android:text="M"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Tu" />
+            android:text="Tu"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="W" />
+            android:text="W"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Th" />
+            android:text="Th"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="F" />
+            android:text="F"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Sa" />
+            android:text="Sa"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Su" />
+            android:text="Su"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="4dp"
+        android:background="@color/colorPrimaryDark" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_calendar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
     </android.support.v4.view.ViewPager>
 

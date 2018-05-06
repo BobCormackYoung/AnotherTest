@@ -7,4 +7,5 @@
     <color name="colorLogBookListItemBkgd">#E6FFF7DA</color>
     <color name="colorClimbingItems">#E66874D1</color>
     <color name="colorTrainingItems">#E668D19B</color>
+    <color name="colorTrainingClimbItems">#E6f47d42</color>
 </resources>

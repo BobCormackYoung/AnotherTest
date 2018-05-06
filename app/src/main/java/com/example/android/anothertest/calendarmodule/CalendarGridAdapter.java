@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.anothertest.R;
@@ -55,8 +56,11 @@ public class CalendarGridAdapter extends ArrayAdapter<MonthDays> {
         MonthDays monthDay = getItem(position);
 
         TextView dayLabel = (TextView) view.findViewById(R.id.tv_daynumber);
+        LinearLayout climbTextViewHolder = (LinearLayout) view.findViewById(R.id.calendar_climb_symbol_holder);
         TextView climbTextView = (TextView) view.findViewById(R.id.calendar_climb_symbol);
+        LinearLayout workoutTextViewHolder = (LinearLayout) view.findViewById(R.id.calendar_workout_symbol_holder);
         TextView workoutTextView = (TextView) view.findViewById(R.id.calendar_workout_symbol);
+        LinearLayout workoutClimbTextViewHolder = (LinearLayout) view.findViewById(R.id.calendar_workoutclimb_symbol_holder);
         TextView workoutClimbTextView = (TextView) view.findViewById(R.id.calendar_workoutclimb_symbol);
 
         Calendar day = new GregorianCalendar();
@@ -65,27 +69,34 @@ public class CalendarGridAdapter extends ArrayAdapter<MonthDays> {
         dayLabel.setText(String.valueOf(day.get(Calendar.DAY_OF_MONTH)));
 
         if (isCurrentMonthDay(day) == true) {
-            dayLabel.setTypeface(Typeface.DEFAULT, 0);
+            if (isCurrentDay(day) == true) {
+                dayLabel.setTypeface(Typeface.DEFAULT_BOLD, 1); // BOLD if today
+            } else {
+                dayLabel.setTypeface(Typeface.DEFAULT, 0); // NORMAL is this month
+            }
         } else {
-            dayLabel.setTypeface(Typeface.DEFAULT, 2);
+            dayLabel.setTypeface(Typeface.DEFAULT, 2); // ITALICS if bounding months
         }
 
         if (monthDay.getFlagClimbing() == 0) {
-            climbTextView.setVisibility(View.GONE);
+            climbTextViewHolder.setVisibility(View.GONE);
         } else {
-            climbTextView.setVisibility(View.VISIBLE);
+            climbTextViewHolder.setVisibility(View.VISIBLE);
+            climbTextView.setBackgroundResource(R.drawable.climb_circle);
         }
 
         if (monthDay.getFlagWorkout() == 0) {
-            workoutTextView.setVisibility(View.GONE);
+            workoutTextViewHolder.setVisibility(View.GONE);
         } else {
-            workoutTextView.setVisibility(View.VISIBLE);
+            workoutTextViewHolder.setVisibility(View.VISIBLE);
+            workoutTextView.setBackgroundResource(R.drawable.workout_circle);
         }
 
         if (monthDay.getFlagWorkoutClimb() == 0) {
-            workoutClimbTextView.setVisibility(View.GONE);
+            workoutClimbTextViewHolder.setVisibility(View.GONE);
         } else {
-            workoutClimbTextView.setVisibility(View.VISIBLE);
+            workoutClimbTextViewHolder.setVisibility(View.VISIBLE);
+            workoutClimbTextView.setBackgroundResource(R.drawable.workoutclimb_circle);
         }
 
         return view;
@@ -93,6 +104,21 @@ public class CalendarGridAdapter extends ArrayAdapter<MonthDays> {
 
     private boolean isCurrentMonthDay(Calendar day) {
         return day.get(Calendar.MONTH) == mMonth;
+    }
+
+    private boolean isCurrentDay(Calendar day) {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+
+        day.set(Calendar.HOUR_OF_DAY, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 0);
+
+        return day.getTimeInMillis() == today.getTimeInMillis();
     }
 
 }
