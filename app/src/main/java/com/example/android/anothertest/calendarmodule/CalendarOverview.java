@@ -26,6 +26,7 @@ public class CalendarOverview extends AppCompatActivity {
     private int mCurrentPage = CALENDAR_MID_PAGE; //set the initial current page to the mid page
     private ViewPager mViewPager;
     private Context mContext;
+
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

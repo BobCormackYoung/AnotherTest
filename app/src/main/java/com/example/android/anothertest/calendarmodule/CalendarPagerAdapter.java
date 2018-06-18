@@ -20,7 +20,7 @@ import java.util.Date;
 public class CalendarPagerAdapter extends PagerAdapter {
 
     private final String LOG_TAG = getClass().getSimpleName();
-    ;
+
     private final int LOG_SWITCH = 1; //1=log, 0=no log
     private final int CALENDAR_SIZE = CalendarOverview.CALENDAR_SIZE;
     private Context mContext;
