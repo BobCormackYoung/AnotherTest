@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.anothertest.R;
@@ -18,9 +17,9 @@ public class CalendarOverview extends AppCompatActivity {
     public static final int CALENDAR_SIZE = 2401; //total calendar size (100years either side)
     public static final int CALENDAR_MID_PAGE = CALENDAR_SIZE / 2; //find location of the mid-page
     private final String LOG_TAG = getClass().getSimpleName();
-    public Button btPrevious;
+    public TextView btPrevious;
     public TextView tvMonth;
-    public Button btNext;
+    public TextView btNext;
     private CalendarProperties mCalendarProperties;
     private CalendarPagerAdapter mCalendarPagerAdapter;
     private int mCurrentPage = CALENDAR_MID_PAGE; //set the initial current page to the mid page
@@ -73,9 +72,9 @@ public class CalendarOverview extends AppCompatActivity {
 
         mContext = this;
 
-        btPrevious = (Button) findViewById(R.id.cal_button_previous_day);
-        tvMonth = (TextView) findViewById(R.id.cal_textview_date);
-        btNext = (Button) findViewById(R.id.cal_button_next_day);
+        btPrevious = findViewById(R.id.cal_button_previous_day);
+        tvMonth = findViewById(R.id.cal_textview_date);
+        btNext = findViewById(R.id.cal_button_next_day);
 
         mCalendarProperties = new CalendarProperties();
         mCalendarProperties.setCalendarSize(CALENDAR_SIZE);

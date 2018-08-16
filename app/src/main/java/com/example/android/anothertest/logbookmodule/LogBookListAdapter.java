@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.anothertest.R;
@@ -59,8 +60,12 @@ public class LogBookListAdapter extends CursorAdapter {
             int firstAscentCode = bundle.getInt("outputFirstAscent");
             if (firstAscentCode == DatabaseContract.FIRSTASCENT_TRUE) {
                 info3Text = "First Ascent";
+                view.findViewById(R.id.trophy_icon).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.trophy_text).setVisibility(View.VISIBLE);
             } else {
                 info3Text = "Repeat Ascent";
+                view.findViewById(R.id.trophy_icon).setVisibility(View.GONE);
+                view.findViewById(R.id.trophy_text).setVisibility(View.GONE);
             }
             int gradeCode = bundle.getInt("outputGradeNumber");
             gradeText = DatabaseReadWrite.getGradeTextClimb(gradeCode, context);
@@ -78,14 +83,13 @@ public class LogBookListAdapter extends CursorAdapter {
             info2Text = "Additional Weight: " + bundle.getDouble("outputWeight") + " Kg";
             info3Text = "...";
             gradeText = "WK";
+            view.findViewById(R.id.trophy_icon).setVisibility(View.GONE);
+            view.findViewById(R.id.trophy_text).setVisibility(View.GONE);
             //TODO: add logic so that correct information is displayed for this item
         }
 
         TextView titleTextView = (TextView) view.findViewById(R.id.log_book_list_item_title);
         titleTextView.setText(titleText);
-
-        TextView gradeTextView = (TextView) view.findViewById(R.id.log_book_list_item_icon);
-        gradeTextView.setText(gradeText);
 
         TextView info1TextView = (TextView) view.findViewById(R.id.log_book_list_item_info1);
         info1TextView.setText(info1Text);
@@ -96,20 +100,26 @@ public class LogBookListAdapter extends CursorAdapter {
         TextView info3TextView = (TextView) view.findViewById(R.id.log_book_list_item_info3);
         info3TextView.setText(info3Text);
 
-        //View textContainer = listItemView.findViewById(R.id.log_book_list_item_wrapper);
-        TextView textContainer = (TextView) view.findViewById(R.id.log_book_list_item_icon);
+        TextView itemDivider = (TextView) view.findViewById(R.id.list_item_divider);
+        ImageView iconView = (ImageView) view.findViewById(R.id.log_book_list_item_icon_image);
+        TextView gradeTextView = (TextView) view.findViewById(R.id.log_book_list_item_icon);
         if (logTag == DatabaseContract.IS_CLIMB) {
             // Find the color that the resource ID maps to
-            int color = ContextCompat.getColor(context, R.color.colorTrainingItems);
+            int color = ContextCompat.getColor(context, R.color.colorClimbingItemsV2);
             // Set the background color of the text container View
-            //textContainer.setBackgroundColor(color);
-            textContainer.setTextColor(color);
+            itemDivider.setBackgroundColor(color);
+            // Unhide the grade view value & display
+            gradeTextView.setVisibility(View.VISIBLE);
+            gradeTextView.setText(gradeText);
+            iconView.setImageResource(R.drawable.icons_drawstringbag96);
         } else if (logTag == DatabaseContract.IS_WORKOUT) {
             // Find the color that the resource ID maps to
-            int color = ContextCompat.getColor(context, R.color.colorClimbingItems);
+            int color = ContextCompat.getColor(context, R.color.colorTrainingClimbItemsV2);
             // Set the background color of the text container View
-            //textContainer.setBackgroundColor(color);
-            textContainer.setTextColor(color);
+            itemDivider.setBackgroundColor(color);
+            // Hide the grade view value
+            gradeTextView.setVisibility(View.GONE);
+            iconView.setImageResource(R.drawable.icons_weightlifting96);
         }
     }
 
