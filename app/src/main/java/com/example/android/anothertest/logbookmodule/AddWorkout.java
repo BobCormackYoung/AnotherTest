@@ -1,8 +1,12 @@
 package com.example.android.anothertest.logbookmodule;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -35,6 +39,10 @@ public class AddWorkout extends AppCompatActivity {
     long outputDate = -1;
     int inputIntentCode = -1;
     int inputRowID = -1;
+    long stopTime = 0;
+    long saveTime = 0;
+    int triggerRestPerSet = 0;
+    int triggerRepDuration = 0;
 
     // Initialise counters
     double counterWeight = 0;
@@ -50,7 +58,8 @@ public class AddWorkout extends AppCompatActivity {
     LinearLayout chronometerWrapper;
     Chronometer chronometerTimer;
     Button chronometerStart;
-    Button chronometerStop;
+    Button chronometerPause;
+    Button chronometerReset;
     Button chronometerSave;
 
     LinearLayout workoutDateWrapper; // Date wrapper
@@ -219,15 +228,19 @@ public class AddWorkout extends AppCompatActivity {
         int outputRepDurationPerSet = bundle.getInt("outputRepDurationPerSet");
         if (outputRepDurationPerSet == DatabaseContract.IS_TRUE) {
             workoutRepDurationWrapper.setVisibility(View.VISIBLE);
+            triggerRepDuration = 1;
         } else {
             workoutRepDurationWrapper.setVisibility(View.GONE);
+            triggerRepDuration = 0;
         }
 
         int outputIsRestDuratonPerSet = bundle.getInt("outputIsRestDuratonPerSet");
         if (outputIsRestDuratonPerSet == DatabaseContract.IS_TRUE) {
             workoutRestWrapper.setVisibility(View.VISIBLE);
+            triggerRestPerSet = 1;
         } else {
             workoutRestWrapper.setVisibility(View.GONE);
+            triggerRestPerSet = 0;
         }
 
         int outputIsSetCount = bundle.getInt("outputIsSetCount");
@@ -253,7 +266,8 @@ public class AddWorkout extends AppCompatActivity {
         chronometerWrapper = findViewById(R.id.chronometerWrapper);
         chronometerTimer = findViewById(R.id.chronometer);
         chronometerStart = findViewById(R.id.buttonStartChrono);
-        chronometerStop = findViewById(R.id.buttonStopChrono);
+        chronometerPause = findViewById(R.id.buttonPauseChrono);
+        chronometerReset = findViewById(R.id.buttonResetChrono);
         chronometerSave = findViewById(R.id.buttonSaveChrono);
 
         // Date Wrapper
@@ -365,16 +379,100 @@ public class AddWorkout extends AppCompatActivity {
         });
 
         // Chronometer
+        chronometerStart.setClickable(true);
+        chronometerPause.setClickable(false);
+        chronometerSave.setClickable(false);
         chronometerStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                chronometerTimer.setBase(SystemClock.elapsedRealtime() + stopTime);
                 chronometerTimer.start();
+                chronometerStart.setClickable(false);
+                chronometerPause.setClickable(true);
+                chronometerSave.setClickable(false);
             }
         });
-        chronometerStop.setOnClickListener(new View.OnClickListener() {
+        chronometerPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopTime = chronometerTimer.getBase() - SystemClock.elapsedRealtime();
                 chronometerTimer.stop();
+                chronometerStart.setClickable(true);
+                chronometerPause.setClickable(false);
+                chronometerSave.setClickable(true);
+            }
+        });
+        chronometerReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chronometerTimer.setBase(SystemClock.elapsedRealtime());
+                stopTime = 0;
+                chronometerTimer.stop();
+                chronometerStart.setClickable(true);
+                chronometerPause.setClickable(false);
+                chronometerSave.setClickable(false);
+            }
+        });
+        chronometerSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveTime = Math.abs(stopTime);
+
+                Log.i("CHRONO_LOG", "Saving Time: " + saveTime);
+
+                if (outputWorkoutNumber == 0) {
+                    // No workout selected
+                    Log.i("CHRONO_LOG", "Option 1");
+                    CharSequence text = "No workout selected. Can't to save data!";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                    toast.show();
+                } else {
+                    // Workout is selected
+                    // Give different options for saving data depending on data required for workout
+                    Log.i("CHRONO_LOG", "Option 2");
+                    Log.i("CHRONO_LOG", "triggerRepDuration = " + triggerRepDuration + ", triggerRestPerSet = " + triggerRestPerSet);
+                    if (triggerRepDuration == 1 & triggerRestPerSet == 0) {
+                        // Need a
+                        counterRepTime = (int) saveTime;
+                        Log.i("CHRONO_LOG", "Option 2:1 " + counterRepTime);
+                        workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
+                    } else if (triggerRepDuration == 1 & triggerRestPerSet == 1) {
+                        CharSequence[] pickerValues = new CharSequence[]{"Rep Duration", "Rest Per Set"};
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AddWorkout.this);
+                        builder.setTitle("Pick a value to save to:");
+                        builder.setItems(pickerValues, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    counterRepTime = (int) saveTime;
+                                    Log.i("CHRONO_LOG", "Option 2:2 " + counterRepTime);
+                                    workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
+                                } else if (which == 1) {
+                                    counterRestTime = (int) saveTime;
+                                    Log.i("CHRONO_LOG", "Option 2:2 " + counterRepTime);
+                                    workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
+                                }
+                            }
+                        });
+                        builder.show();
+                    } else if (triggerRepDuration == 0 & triggerRestPerSet == 1) {
+                        CharSequence[] pickerValues = new CharSequence[]{"Rest Per Set"};
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AddWorkout.this);
+                        builder.setTitle("Pick a value to save to:");
+                        builder.setItems(pickerValues, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                counterRestTime = (int) saveTime;
+                                Log.i("CHRONO_LOG", "Option 2:3 " + saveTime);
+                                workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
+                            }
+                        });
+                        builder.show();
+                    }
+                }
+
+
             }
         });
 
@@ -384,8 +482,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterWeight - INCREMENT_WEIGHT_SMALL >= 0) {
                     counterWeight = counterWeight - INCREMENT_WEIGHT_SMALL;
-                    workoutWeightEditText.setText("" + counterWeight + " Kg");
+                } else {
+                    counterWeight = 0;
                 }
+                workoutWeightEditText.setText("" + counterWeight + " Kg");
             }
         });
         workoutWeightButtonMinusBig.setOnClickListener(new View.OnClickListener() {
@@ -393,8 +493,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterWeight - INCREMENT_WEIGHT_LARGE >= 0) {
                     counterWeight = counterWeight - INCREMENT_WEIGHT_LARGE;
-                    workoutWeightEditText.setText("" + counterWeight + " Kg");
+                } else {
+                    counterWeight = 0;
                 }
+                workoutWeightEditText.setText("" + counterWeight + " Kg");
             }
         });
         workoutWeightButtonPlus.setOnClickListener(new View.OnClickListener() {
@@ -418,8 +520,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterSetCount - INCREMENT_COUNT_SMALL >= 0) {
                     counterSetCount = counterSetCount - INCREMENT_COUNT_SMALL;
-                    workoutSetCountEditText.setText("" + counterSetCount);
+                } else {
+                    counterSetCount = 0;
                 }
+                workoutSetCountEditText.setText("" + counterSetCount);
             }
         });
         workoutSetCountButtonMinusBig.setOnClickListener(new View.OnClickListener() {
@@ -427,8 +531,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterSetCount - INCREMENT_COUNT_LARGE >= 0) {
                     counterSetCount = counterSetCount - INCREMENT_COUNT_LARGE;
-                    workoutSetCountEditText.setText("" + counterSetCount);
+                } else {
+                    counterSetCount = 0;
                 }
+                workoutSetCountEditText.setText("" + counterSetCount);
             }
         });
         workoutSetCountButtonPlus.setOnClickListener(new View.OnClickListener() {
@@ -452,8 +558,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterRepCount - INCREMENT_COUNT_SMALL >= 0) {
                     counterRepCount = counterRepCount - INCREMENT_COUNT_SMALL;
-                    workoutRepCountEditText.setText("" + counterRepCount);
+                } else {
+                    counterRepCount = 0;
                 }
+                workoutRepCountEditText.setText("" + counterRepCount);
             }
         });
         workoutRepCountButtonMinusBig.setOnClickListener(new View.OnClickListener() {
@@ -461,8 +569,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterRepCount - INCREMENT_COUNT_LARGE >= 0) {
                     counterRepCount = counterRepCount - INCREMENT_COUNT_LARGE;
-                    workoutRepCountEditText.setText("" + counterRepCount);
+                } else {
+                    counterRepCount = 0;
                 }
+                workoutRepCountEditText.setText("" + counterRepCount);
             }
         });
         workoutRepCountButtonPlus.setOnClickListener(new View.OnClickListener() {
@@ -486,8 +596,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterRepTime - INCREMENT_TIME_SHORT >= 0) {
                     counterRepTime = counterRepTime - INCREMENT_TIME_SHORT;
-                    workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
+                } else {
+                    counterRepTime = 0;
                 }
+                workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
             }
         });
         workoutRepDurationButtonMinusBig.setOnClickListener(new View.OnClickListener() {
@@ -495,8 +607,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterRepTime - INCREMENT_TIME_LONG >= 0) {
                     counterRepTime = counterRepTime - INCREMENT_TIME_LONG;
-                    workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
+                } else {
+                    counterRepTime = 0;
                 }
+                workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
             }
         });
         workoutRepDurationButtonPlus.setOnClickListener(new View.OnClickListener() {
@@ -520,8 +634,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterRestTime - INCREMENT_TIME_SHORT >= 0) {
                     counterRestTime = counterRestTime - INCREMENT_TIME_SHORT;
-                    workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
+                } else {
+                    counterRestTime = 0;
                 }
+                workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
             }
         });
         workoutRestButtonMinusBig.setOnClickListener(new View.OnClickListener() {
@@ -529,8 +645,10 @@ public class AddWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 if (counterRestTime - INCREMENT_TIME_LONG >= 0) {
                     counterRestTime = counterRestTime - INCREMENT_TIME_LONG;
-                    workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
+                } else {
+                    counterRestTime = 0;
                 }
+                workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
             }
         });
         workoutRestButtonPlus.setOnClickListener(new View.OnClickListener() {
@@ -549,5 +667,6 @@ public class AddWorkout extends AppCompatActivity {
         });
 
     }
+
 
 }

@@ -52,13 +52,19 @@
                 android:id="@+id/buttonStartChrono"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:text="P" />
+                android:text="St" />
 
             <Button
-                android:id="@+id/buttonStopChrono"
+                android:id="@+id/buttonPauseChrono"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:text="S" />
+                android:text="Pa" />
+
+            <Button
+                android:id="@+id/buttonResetChrono"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:text="Re" />
 
             <Button
                 android:id="@+id/buttonSaveChrono"
