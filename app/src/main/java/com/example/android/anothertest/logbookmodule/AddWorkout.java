@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.android.anothertest.R;
 import com.example.android.anothertest.data.DatabaseContract;
 import com.example.android.anothertest.data.DatabaseReadWrite;
+import com.example.android.anothertest.logbookmodule.gradepicker.ParentGradeHolder;
+import com.example.android.anothertest.logbookmodule.holdtypepicker.HoldTypeHolder;
 import com.example.android.anothertest.logbookmodule.workoutpicker.ParentWorkoutHolder;
 import com.example.android.anothertest.util.TimeUtils;
 
@@ -26,6 +28,8 @@ import com.example.android.anothertest.util.TimeUtils;
 public class AddWorkout extends AppCompatActivity {
 
     final int PICK_TRAINING_REQUEST = 1;
+    final int PICK_GRADE_REQUEST = 2;
+    final int PICK_HOLDTYPE_REQUEST = 3;
     final int ADD_WORKOUT_NEW = 0;
     final int ADD_WORKOUT_EDIT = 1;
     final int INCREMENT_TIME_SHORT = 5000; // 5 seconds in milliseconds
@@ -34,15 +38,24 @@ public class AddWorkout extends AppCompatActivity {
     final double INCREMENT_WEIGHT_LARGE = 5; // 5 KG
     final int INCREMENT_COUNT_SMALL = 1; // set count
     final int INCREMENT_COUNT_LARGE = 5; // set count
-    int outputWorkoutNumber; // Workout number
-    int outputWorkoutName; // Workout name
-    long outputDate = -1;
+    final int ABSOLUTE_MINIMUM = 0;
+    int outputWorkoutNumber = -1; // Workout number
     int inputIntentCode = -1;
     int inputRowID = -1;
     long stopTime = 0;
     long saveTime = 0;
     int triggerRestPerSet = 0;
     int triggerRepDuration = 0;
+    int outputWorkoutName = -1; // Workout name
+    int triggerGradeCode = 0;
+    int triggerMoveCount = 0;
+    int triggerWallAngle = 0;
+    int triggerHoldType = 0;
+    // Initialise output values
+    long outputDate = -1;
+    int outputGradeNumber = -1;
+    int outputGradeName = -1;
+    int outputHoldType = -1;
 
     // Initialise counters
     double counterWeight = 0;
@@ -51,6 +64,7 @@ public class AddWorkout extends AppCompatActivity {
     int counterRepTime = 0;
     int counterSetCount = 1;
     int counterMoveCount = 0;
+    int counterWallAngle = 0;
 
     TextView titleWrapper; // Title wrapper
 
@@ -106,6 +120,23 @@ public class AddWorkout extends AppCompatActivity {
     LinearLayout workoutGradeWrapper; // Grade Wrapper
     EditText workoutGradeEditText; // Grade EditText
 
+    LinearLayout workoutMoveCountWrapper; // Move Count wrapper
+    EditText workoutMoveCountEditText; // Move Count EditText
+    Button workoutMoveCountButtonMinus; // Move Count MinusButton
+    Button workoutMoveCountButtonPlus; // Move Count PlusButton
+    Button workoutMoveCountButtonMinusBig; // Move Count MinusButton
+    Button workoutMoveCountButtonPlusBig; // Move Count PlusButton
+
+    LinearLayout workoutWallAngleWrapper; // Wall Angle wrapper
+    EditText workoutWallAngleEditText; // Wall Angle EditText
+    Button workoutWallAngleButtonMinus; // Wall Angle MinusButton
+    Button workoutWallAngleButtonPlus; // Wall Angle PlusButton
+    Button workoutWallAngleButtonMinusBig; // Wall Angle MinusButton
+    Button workoutWallAngleButtonPlusBig; // Wall Angle PlusButton
+
+    LinearLayout workoutHoldTypeWrapper; // Hold Type Wrapper
+    EditText workoutHoldTypeEditText; // Hold Type EditText
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,29 +165,24 @@ public class AddWorkout extends AppCompatActivity {
             workoutRestWrapper.setVisibility(View.GONE);
             // Grade or Difficulty Input Wrapper
             workoutGradeWrapper.setVisibility(View.GONE);
+            // Move Count Input Wrapper
+            workoutMoveCountWrapper.setVisibility(View.GONE);
+            // Wall Angle Input Wrapper
+            workoutWallAngleWrapper.setVisibility(View.GONE);
+            // Hold Type Input Wrapper
+            workoutHoldTypeWrapper.setVisibility(View.GONE);
 
         } else if (inputIntentCode == ADD_WORKOUT_EDIT) {
 
             // Get the workout entry information, update the view fields
             Bundle workoutEntryBundle = DatabaseReadWrite.EditWorkoutLoadEntry(inputRowID, this);
-            outputWorkoutNumber = workoutEntryBundle.getInt("outputWorkoutCode");
-            outputWorkoutName = workoutEntryBundle.getInt("outputWorkoutTypeCode");
-            counterWeight = workoutEntryBundle.getDouble("outputWeight");
-            counterRestTime = workoutEntryBundle.getInt("outputRestDuration");
-            counterRepCount = workoutEntryBundle.getInt("outputRepCount");
-            counterRepTime = workoutEntryBundle.getInt("outputRepDuration");
-            counterSetCount = workoutEntryBundle.getInt("outputSetCount");
-            counterMoveCount = workoutEntryBundle.getInt("outputMoveCount");
+            getWorkoutInfoFromBundle(workoutEntryBundle);
 
             // Get which fields should be shown
             Bundle workoutFieldsBundle = DatabaseReadWrite.workoutLoadFields(outputWorkoutNumber, this);
-
-            // Display the data
-            workoutDateEditText.setText(TimeUtils.convertDate(outputDate, "yyyy-MM-dd"));
-            String outputStringWorkoutName = DatabaseReadWrite.getWorkoutTextClimb(outputWorkoutNumber, this);
-            String outputStringWorkoutType = DatabaseReadWrite.getWorkoutTypeClimb(outputWorkoutName, this);
-            workoutTrainingEditText.setText(outputStringWorkoutType + " | " + outputStringWorkoutName);
             getTrainingInputFields(workoutFieldsBundle);
+
+            refreshViews();
         }
 
         onClickListenerInitiation();
@@ -171,90 +197,16 @@ public class AddWorkout extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 putWorkout(data);
             }
-            // TODO: Error handler for nothing passed back
-        }
-    }
-
-    // method for launching the activity for picking the grade
-    private void pickTraining() {
-        // Create new intent
-        Intent selectorIntent = new Intent(this, ParentWorkoutHolder.class);
-        // Start activity for getting result
-        startActivityForResult(selectorIntent, PICK_TRAINING_REQUEST);
-    }
-
-    private void putWorkout(Intent inputData) {
-        // The user picked a workout, get the workout name
-        outputWorkoutNumber = inputData.getIntExtra("OutputWorkoutNumber", 0);
-        String outputStringWorkoutName = DatabaseReadWrite.getWorkoutTextClimb(outputWorkoutNumber, this);
-
-        // The user picked a workout, get the workout type name
-        // Put workout text in the view
-        outputWorkoutName = inputData.getIntExtra("OutputWorkoutName", 0);
-        String outputStringWorkoutType = DatabaseReadWrite.getWorkoutTypeClimb(outputWorkoutName, this);
-        workoutTrainingEditText.setText(outputStringWorkoutType + " | " + outputStringWorkoutName);
-
-        // Display the missing fields
-        Bundle bundle = DatabaseReadWrite.workoutLoadFields(outputWorkoutNumber, this);
-        getTrainingInputFields(bundle);
-    }
-
-    private void getTrainingInputFields(Bundle bundle) {
-
-        workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
-        workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
-        workoutRepCountEditText.setText("" + counterRepCount);
-        workoutSetCountEditText.setText("" + counterSetCount);
-        workoutWeightEditText.setText("" + counterWeight + " Kg");
-
-        int outputIsClimb = bundle.getInt("outputIsClimb");
-        //if (outputIsClimb == DatabaseContract.WorkoutListEntry.IS_TRUE) {
-        //    workoutGradeWrapper.setVisibility(View.VISIBLE);
-        //}
-        int outputIsGradeCode = bundle.getInt("outputIsGradeCode");
-        if (outputIsGradeCode == DatabaseContract.IS_TRUE) {
-            workoutGradeWrapper.setVisibility(View.VISIBLE);
-        } else {
-            workoutGradeWrapper.setVisibility(View.GONE);
-        }
-
-        int outputIsRepCountPerSet = bundle.getInt("outputIsRepCountPerSet");
-        if (outputIsRepCountPerSet == DatabaseContract.IS_TRUE) {
-            workoutRepCountWrapper.setVisibility(View.VISIBLE);
-        } else {
-            workoutRepCountWrapper.setVisibility(View.GONE);
-        }
-
-        int outputRepDurationPerSet = bundle.getInt("outputRepDurationPerSet");
-        if (outputRepDurationPerSet == DatabaseContract.IS_TRUE) {
-            workoutRepDurationWrapper.setVisibility(View.VISIBLE);
-            triggerRepDuration = 1;
-        } else {
-            workoutRepDurationWrapper.setVisibility(View.GONE);
-            triggerRepDuration = 0;
-        }
-
-        int outputIsRestDuratonPerSet = bundle.getInt("outputIsRestDuratonPerSet");
-        if (outputIsRestDuratonPerSet == DatabaseContract.IS_TRUE) {
-            workoutRestWrapper.setVisibility(View.VISIBLE);
-            triggerRestPerSet = 1;
-        } else {
-            workoutRestWrapper.setVisibility(View.GONE);
-            triggerRestPerSet = 0;
-        }
-
-        int outputIsSetCount = bundle.getInt("outputIsSetCount");
-        if (outputIsSetCount == DatabaseContract.IS_TRUE) {
-            workoutSetCountWrapper.setVisibility(View.VISIBLE);
-        } else {
-            workoutSetCountWrapper.setVisibility(View.GONE);
-        }
-
-        int outputIsWeight = bundle.getInt("outputIsWeight");
-        if (outputIsWeight == DatabaseContract.IS_TRUE) {
-            workoutWeightWrapper.setVisibility(View.VISIBLE);
-        } else {
-            workoutWeightWrapper.setVisibility(View.GONE);
+        } else if (requestCode == PICK_GRADE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                putGrade(data);
+            }
+        } else if (requestCode == PICK_HOLDTYPE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                putHoldType(data);
+            }
         }
     }
 
@@ -322,6 +274,26 @@ public class AddWorkout extends AppCompatActivity {
         workoutGradeWrapper = findViewById(R.id.workoutTextWrapper8);
         workoutGradeEditText = findViewById(R.id.workoutEditText8);
 
+        // Move Count Input Wrapper
+        workoutMoveCountWrapper = findViewById(R.id.workoutTextWrapper9);
+        workoutMoveCountEditText = findViewById(R.id.workoutEditText9);
+        workoutMoveCountButtonMinus = findViewById(R.id.workoutButtonMinus9);
+        workoutMoveCountButtonPlus = findViewById(R.id.workoutButtonPlus9);
+        workoutMoveCountButtonMinusBig = findViewById(R.id.workoutButtonMinus9a);
+        workoutMoveCountButtonPlusBig = findViewById(R.id.workoutButtonPlus9a);
+
+        // Wall Angle Input Wrapper
+        workoutWallAngleWrapper = findViewById(R.id.workoutTextWrapper10);
+        workoutWallAngleEditText = findViewById(R.id.workoutEditText10);
+        workoutWallAngleButtonMinus = findViewById(R.id.workoutButtonMinus10);
+        workoutWallAngleButtonPlus = findViewById(R.id.workoutButtonPlus10);
+        workoutWallAngleButtonMinusBig = findViewById(R.id.workoutButtonMinus10a);
+        workoutWallAngleButtonPlusBig = findViewById(R.id.workoutButtonPlus10a);
+
+        // Hod Type Input Wrapper
+        workoutHoldTypeWrapper = findViewById(R.id.workoutTextWrapper11);
+        workoutHoldTypeEditText = findViewById(R.id.workoutEditText11);
+
     }
 
     private void onClickListenerInitiation() {
@@ -332,28 +304,22 @@ public class AddWorkout extends AppCompatActivity {
                 if (inputIntentCode == ADD_WORKOUT_NEW) {
                     // Only allow workout type to be changed if saving a new workout
                     pickTraining();
-
-                    // Reset the counters when changing the workout
-                    counterWeight = 0;
-                    counterRestTime = 0;
-                    counterRepCount = 1;
-                    counterRepTime = 0;
-                    counterSetCount = 1;
-                    counterMoveCount = 0;
+                    resetOutputs();
+                    refreshViews();
                 }
             }
         });
 
         // Listener for the save button
-        Button saveButton = (Button) findViewById(R.id.log_training_save);
+        Button saveButton = findViewById(R.id.log_training_save);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (inputIntentCode == ADD_WORKOUT_NEW) {
-                    if (outputWorkoutNumber != 0 && outputWorkoutName != 0) {
+                    if (outputWorkoutNumber != -1 && outputWorkoutName != -1) {
                         long outputRow = DatabaseReadWrite.writeWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
-                                counterRepCount, counterRepTime, counterRestTime, 0, 0, counterMoveCount, AddWorkout.this);
+                                counterRepCount, counterRepTime, counterRestTime, outputGradeName, outputGradeNumber, counterMoveCount, outputHoldType, counterWallAngle, AddWorkout.this);
                         DatabaseReadWrite.writeCalendarUpdate(DatabaseContract.IS_WORKOUT, outputDate, outputRow, AddWorkout.this);
                         Toast.makeText(getApplicationContext(), "New Row ID: " + outputRow, Toast.LENGTH_SHORT).show();
                         finish();
@@ -362,7 +328,7 @@ public class AddWorkout extends AppCompatActivity {
                     }
                 } else if (inputIntentCode == ADD_WORKOUT_EDIT) {
                     long outputRow = DatabaseReadWrite.updateWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
-                            counterRepCount, counterRepTime, counterRestTime, 0, 0, counterMoveCount, inputRowID, AddWorkout.this);
+                            counterRepCount, counterRepTime, counterRestTime, outputGradeName, outputGradeNumber, counterMoveCount, outputHoldType, counterWallAngle, inputRowID, AddWorkout.this);
                     Toast.makeText(getApplicationContext(), "New Row ID: " + outputRow, Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -370,7 +336,7 @@ public class AddWorkout extends AppCompatActivity {
         });
 
         // Listener for the cancel button
-        Button cancelButton = (Button) findViewById(R.id.log_training_cancel);
+        Button cancelButton = findViewById(R.id.log_training_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -420,7 +386,7 @@ public class AddWorkout extends AppCompatActivity {
 
                 Log.i("CHRONO_LOG", "Saving Time: " + saveTime);
 
-                if (outputWorkoutNumber == 0) {
+                if (outputWorkoutNumber == -1) {
                     // No workout selected
                     Log.i("CHRONO_LOG", "Option 1");
                     CharSequence text = "No workout selected. Can't to save data!";
@@ -518,10 +484,10 @@ public class AddWorkout extends AppCompatActivity {
         workoutSetCountButtonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (counterSetCount - INCREMENT_COUNT_SMALL >= 0) {
+                if (counterSetCount - INCREMENT_COUNT_SMALL >= 1) {
                     counterSetCount = counterSetCount - INCREMENT_COUNT_SMALL;
                 } else {
-                    counterSetCount = 0;
+                    counterSetCount = 1;
                 }
                 workoutSetCountEditText.setText("" + counterSetCount);
             }
@@ -529,10 +495,10 @@ public class AddWorkout extends AppCompatActivity {
         workoutSetCountButtonMinusBig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (counterSetCount - INCREMENT_COUNT_LARGE >= 0) {
+                if (counterSetCount - INCREMENT_COUNT_LARGE >= 1) {
                     counterSetCount = counterSetCount - INCREMENT_COUNT_LARGE;
                 } else {
-                    counterSetCount = 0;
+                    counterSetCount = 1;
                 }
                 workoutSetCountEditText.setText("" + counterSetCount);
             }
@@ -556,10 +522,10 @@ public class AddWorkout extends AppCompatActivity {
         workoutRepCountButtonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (counterRepCount - INCREMENT_COUNT_SMALL >= 0) {
+                if (counterRepCount - INCREMENT_COUNT_SMALL >= 1) {
                     counterRepCount = counterRepCount - INCREMENT_COUNT_SMALL;
                 } else {
-                    counterRepCount = 0;
+                    counterRepCount = 1;
                 }
                 workoutRepCountEditText.setText("" + counterRepCount);
             }
@@ -567,10 +533,10 @@ public class AddWorkout extends AppCompatActivity {
         workoutRepCountButtonMinusBig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (counterRepCount - INCREMENT_COUNT_LARGE >= 0) {
+                if (counterRepCount - INCREMENT_COUNT_LARGE >= 1) {
                     counterRepCount = counterRepCount - INCREMENT_COUNT_LARGE;
                 } else {
-                    counterRepCount = 0;
+                    counterRepCount = 1;
                 }
                 workoutRepCountEditText.setText("" + counterRepCount);
             }
@@ -666,7 +632,301 @@ public class AddWorkout extends AppCompatActivity {
             }
         });
 
+        // Grade Type Listener
+        workoutGradeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickGrade();
+            }
+        });
+
+        // Move Count Button Listeners
+        workoutMoveCountButtonMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (counterMoveCount - INCREMENT_COUNT_SMALL >= 0) {
+                    counterMoveCount = counterMoveCount - INCREMENT_COUNT_SMALL;
+                } else {
+                    counterMoveCount = 0;
+                }
+                workoutMoveCountEditText.setText(counterMoveCount + "");
+            }
+        });
+        workoutMoveCountButtonMinusBig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (counterMoveCount - INCREMENT_COUNT_LARGE >= 0) {
+                    counterMoveCount = counterMoveCount - INCREMENT_COUNT_LARGE;
+                } else {
+                    counterMoveCount = 0;
+                }
+                workoutMoveCountEditText.setText(counterMoveCount + "");
+            }
+        });
+        workoutMoveCountButtonPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counterMoveCount = counterMoveCount + INCREMENT_COUNT_SMALL;
+                workoutMoveCountEditText.setText(counterMoveCount + "");
+            }
+        });
+        workoutMoveCountButtonPlusBig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counterMoveCount = counterMoveCount + INCREMENT_COUNT_LARGE;
+                workoutMoveCountEditText.setText(counterMoveCount + "");
+            }
+        });
+
+        // Wall Angle Button Listeners
+        workoutWallAngleButtonMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (counterWallAngle - INCREMENT_COUNT_SMALL >= 0) {
+                    counterWallAngle = counterWallAngle - INCREMENT_COUNT_SMALL;
+                } else {
+                    counterWallAngle = 0;
+                }
+                workoutWallAngleEditText.setText(counterWallAngle + "");
+            }
+        });
+        workoutWallAngleButtonMinusBig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (counterWallAngle - INCREMENT_COUNT_LARGE >= 0) {
+                    counterWallAngle = counterWallAngle - INCREMENT_COUNT_LARGE;
+                } else {
+                    counterWallAngle = 0;
+                }
+                workoutWallAngleEditText.setText(counterWallAngle + "");
+            }
+        });
+        workoutWallAngleButtonPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counterWallAngle = counterWallAngle + INCREMENT_COUNT_SMALL;
+                workoutWallAngleEditText.setText(counterWallAngle + "");
+            }
+        });
+        workoutWallAngleButtonPlusBig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counterWallAngle = counterWallAngle + INCREMENT_COUNT_LARGE;
+                workoutWallAngleEditText.setText(counterWallAngle + "");
+            }
+        });
+
+        // Hold Type Listener
+        workoutHoldTypeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickHoldType();
+            }
+        });
+
     }
 
+    private void getTrainingInputFields(Bundle bundle) {
+
+        int outputIsClimb = bundle.getInt("outputIsClimb");
+
+        int outputIsWeight = bundle.getInt("outputIsWeight");
+        if (outputIsWeight == DatabaseContract.IS_TRUE) {
+            workoutWeightWrapper.setVisibility(View.VISIBLE);
+        } else {
+            workoutWeightWrapper.setVisibility(View.GONE);
+        }
+
+        int outputIsSetCount = bundle.getInt("outputIsSetCount");
+        if (outputIsSetCount == DatabaseContract.IS_TRUE) {
+            workoutSetCountWrapper.setVisibility(View.VISIBLE);
+        } else {
+            workoutSetCountWrapper.setVisibility(View.GONE);
+        }
+
+        int outputIsRepCountPerSet = bundle.getInt("outputIsRepCountPerSet");
+        if (outputIsRepCountPerSet == DatabaseContract.IS_TRUE) {
+            workoutRepCountWrapper.setVisibility(View.VISIBLE);
+        } else {
+            workoutRepCountWrapper.setVisibility(View.GONE);
+        }
+
+        int outputRepDurationPerSet = bundle.getInt("outputRepDurationPerSet");
+        if (outputRepDurationPerSet == DatabaseContract.IS_TRUE) {
+            workoutRepDurationWrapper.setVisibility(View.VISIBLE);
+            triggerRepDuration = 1;
+        } else {
+            workoutRepDurationWrapper.setVisibility(View.GONE);
+            triggerRepDuration = 0;
+        }
+
+        int outputIsRestDuratonPerSet = bundle.getInt("outputIsRestDuratonPerSet");
+        if (outputIsRestDuratonPerSet == DatabaseContract.IS_TRUE) {
+            workoutRestWrapper.setVisibility(View.VISIBLE);
+            triggerRestPerSet = 1;
+        } else {
+            workoutRestWrapper.setVisibility(View.GONE);
+            triggerRestPerSet = 0;
+        }
+
+        int outputIsGradeCode = bundle.getInt("outputIsGradeCode");
+        if (outputIsGradeCode == DatabaseContract.IS_TRUE) {
+            workoutGradeWrapper.setVisibility(View.VISIBLE);
+            triggerGradeCode = 1;
+        } else {
+            workoutGradeWrapper.setVisibility(View.GONE);
+            triggerGradeCode = 0;
+        }
+
+        int outputIsMoveCount = bundle.getInt("outputIsMoveCount");
+        if (outputIsMoveCount == DatabaseContract.IS_TRUE) {
+            workoutMoveCountWrapper.setVisibility(View.VISIBLE);
+            triggerMoveCount = 1;
+        } else {
+            workoutRestWrapper.setVisibility(View.GONE);
+            triggerMoveCount = 0;
+        }
+
+        int outputIsWallAngle = bundle.getInt("outputIsWallAngle");
+        if (outputIsWallAngle == DatabaseContract.IS_TRUE) {
+            workoutWallAngleWrapper.setVisibility(View.VISIBLE);
+            triggerWallAngle = 1;
+        } else {
+            workoutWallAngleWrapper.setVisibility(View.GONE);
+            triggerWallAngle = 0;
+        }
+
+        int outputIsHoldType = bundle.getInt("outputIsHoldType");
+        if (outputIsHoldType == DatabaseContract.IS_TRUE) {
+            workoutHoldTypeWrapper.setVisibility(View.VISIBLE);
+            triggerHoldType = 1;
+        } else {
+            workoutHoldTypeWrapper.setVisibility(View.GONE);
+            triggerHoldType = 0;
+        }
+
+
+    }
+
+    private void pickTraining() {
+        // Create new intent
+        Intent selectorIntent = new Intent(this, ParentWorkoutHolder.class);
+        // Start activity for getting result
+        startActivityForResult(selectorIntent, PICK_TRAINING_REQUEST);
+    }
+
+    private void pickGrade() {
+        // Create new intent
+        Intent selectorIntent = new Intent(this, ParentGradeHolder.class);
+        // Start activity for getting result
+        startActivityForResult(selectorIntent, PICK_GRADE_REQUEST);
+    }
+
+    private void pickHoldType() {
+        // Create new intent
+        Intent selectorIntent = new Intent(this, HoldTypeHolder.class);
+        // Start activity for getting result
+        startActivityForResult(selectorIntent, PICK_HOLDTYPE_REQUEST);
+    }
+
+    private void putWorkout(Intent inputData) {
+        // The user picked a workout, get the workout name
+        outputWorkoutNumber = inputData.getIntExtra("OutputWorkoutNumber", -1);
+        String outputStringWorkoutName = DatabaseReadWrite.getWorkoutTextClimb(outputWorkoutNumber, this);
+
+        // The user picked a workout, get the workout type name
+        // Put workout text in the view
+        outputWorkoutName = inputData.getIntExtra("OutputWorkoutName", -1);
+        String outputStringWorkoutType = DatabaseReadWrite.getWorkoutTypeClimb(outputWorkoutName, this);
+        workoutTrainingEditText.setText(outputStringWorkoutType + " | " + outputStringWorkoutName);
+
+        // Display the missing fields
+        Bundle bundle = DatabaseReadWrite.workoutLoadFields(outputWorkoutNumber, this);
+        getTrainingInputFields(bundle);
+    }
+
+    private void putGrade(Intent data) {
+        // The user picked a grade, get the grade number
+        outputGradeNumber = data.getIntExtra("OutputGradeNumber", -1);
+        String outputStringGradeName = DatabaseReadWrite.getGradeTextClimb(outputGradeNumber, this);
+
+        Log.i("ADDWORKOUT LOG", "put grade: " + outputGradeNumber + " " + outputGradeName);
+        outputGradeName = data.getIntExtra("OutputGradeName", -1);
+        String outputStringGradeType = DatabaseReadWrite.getGradeTypeClimb(outputGradeName, this);
+        workoutGradeEditText.setText(outputStringGradeType + " | " + outputStringGradeName);
+    }
+
+    private void putHoldType(Intent data) {
+        outputHoldType = data.getIntExtra("OutputData", -1);
+        String outputStringHoldType = DatabaseReadWrite.getHoldTypeText(outputHoldType, this);
+        workoutHoldTypeEditText.setText(outputStringHoldType);
+    }
+
+    private void resetOutputs() {
+        // reset output values
+        outputGradeNumber = -1;
+        outputGradeName = -1;
+        outputHoldType = -1;
+
+        // reset counters
+        counterWeight = 0;
+        counterRestTime = 0;
+        counterRepCount = 1;
+        counterRepTime = 0;
+        counterSetCount = 1;
+        counterMoveCount = 0;
+        counterWallAngle = 0;
+    }
+
+    private void refreshViews() {
+
+        workoutDateEditText.setText(TimeUtils.convertDate(outputDate, "yyyy-MM-dd"));
+        workoutWeightEditText.setText("" + counterWeight + " Kg");
+        workoutRestEditText.setText(TimeUtils.convertDate(counterRestTime, "mm:ss"));
+        workoutRepCountEditText.setText(Integer.toString(counterRepCount));
+        workoutRepDurationEditText.setText(TimeUtils.convertDate(counterRepTime, "mm:ss"));
+        workoutSetCountEditText.setText(Integer.toString(counterSetCount));
+        workoutMoveCountEditText.setText(Integer.toString(counterMoveCount));
+        workoutWallAngleEditText.setText(Integer.toString(counterWallAngle));
+
+        if (outputGradeNumber == -1) {
+            workoutGradeEditText.setText("");
+        } else {
+            String outputStringGradeName = DatabaseReadWrite.getGradeTextClimb(outputGradeNumber, this);
+            String outputStringGradeType = DatabaseReadWrite.getGradeTypeClimb(outputGradeName, this);
+            workoutGradeEditText.setText(outputStringGradeType + " | " + outputStringGradeName);
+        }
+
+        if (outputHoldType == -1) {
+            workoutHoldTypeEditText.setText("");
+        } else {
+            String outputStringHoldType = DatabaseReadWrite.getHoldTypeText(outputHoldType, this);
+            workoutHoldTypeEditText.setText(outputStringHoldType);
+        }
+
+        if (outputWorkoutNumber == -1) {
+            workoutTrainingEditText.setText("");
+        } else {
+            String outputStringWorkoutName = DatabaseReadWrite.getWorkoutTextClimb(outputWorkoutNumber, this);
+            String outputStringWorkoutType = DatabaseReadWrite.getWorkoutTypeClimb(outputWorkoutName, this);
+            workoutTrainingEditText.setText(outputStringWorkoutType + " | " + outputStringWorkoutName);
+        }
+
+    }
+
+    private void getWorkoutInfoFromBundle(Bundle inputBundle) {
+        outputWorkoutNumber = inputBundle.getInt("outputWorkoutCode");
+        outputWorkoutName = inputBundle.getInt("outputWorkoutTypeCode");
+        counterWeight = inputBundle.getDouble("outputWeight");
+        counterRestTime = inputBundle.getInt("outputRestDuration");
+        counterRepCount = inputBundle.getInt("outputRepCount");
+        counterRepTime = inputBundle.getInt("outputRepDuration");
+        counterSetCount = inputBundle.getInt("outputSetCount");
+        outputGradeName = inputBundle.getInt("outputGradeTypeCode");
+        outputGradeNumber = inputBundle.getInt("outputGradeCode");
+        counterMoveCount = inputBundle.getInt("outputMoveCount");
+        counterWallAngle = inputBundle.getInt("outputWallAngle");
+        outputHoldType = inputBundle.getInt("outputHoldType");
+    }
 
 }

@@ -77,7 +77,7 @@ public class DatabaseReadWrite {
 
             // Get date
             idColumnOutput = cursor.getColumnIndex(DatabaseContract.ClimbLogEntry.COLUMN_DATE);
-            Long outputDate = (long) cursor.getLong(idColumnOutput);
+            Long outputDate = cursor.getLong(idColumnOutput);
             String outputDateString = convertDate(outputDate, "dd/MM/yyyy");
 
             // Get whether first ascent or not
@@ -140,6 +140,8 @@ public class DatabaseReadWrite {
                 DatabaseContract.WorkoutLogEntry.COLUMN_GRADETYPECODE,
                 DatabaseContract.WorkoutLogEntry.COLUMN_GRADECODE,
                 DatabaseContract.WorkoutLogEntry.COLUMN_MOVECOUNT,
+                DatabaseContract.WorkoutLogEntry.COLUMN_WALLANGLE,
+                DatabaseContract.WorkoutLogEntry.COLUMN_HOLDTYPE,
                 DatabaseContract.WorkoutLogEntry.COLUMN_ISCOMPLETE};
         String whereClause = DatabaseContract.WorkoutLogEntry._ID + "=?";
         String[] whereValue = {String.valueOf(inputRowID)};
@@ -156,7 +158,7 @@ public class DatabaseReadWrite {
             cursor.moveToFirst();
 
             int idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutLogEntry.COLUMN_DATE);
-            Long outputDate = (long) cursor.getLong(idColumnOutput);
+            Long outputDate = cursor.getLong(idColumnOutput);
 
             idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutLogEntry.COLUMN_WORKOUTTYPECODE);
             int outputWorkoutTypeCode = cursor.getInt(idColumnOutput);
@@ -191,6 +193,12 @@ public class DatabaseReadWrite {
             idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutLogEntry.COLUMN_MOVECOUNT);
             int outputMoveCount = cursor.getInt(idColumnOutput);
 
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutLogEntry.COLUMN_WALLANGLE);
+            int outputWallAngle = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutLogEntry.COLUMN_HOLDTYPE);
+            int outputHoldType = cursor.getInt(idColumnOutput);
+
             idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutLogEntry.COLUMN_ISCOMPLETE);
             int outputIsComplete = cursor.getInt(idColumnOutput);
 
@@ -206,6 +214,8 @@ public class DatabaseReadWrite {
             outputBundle.putInt("outputGradeTypeCode", outputGradeTypeCode);
             outputBundle.putInt("outputGradeCode", outputGradeCode);
             outputBundle.putInt("outputMoveCount", outputMoveCount);
+            outputBundle.putInt("outputWallAngle", outputWallAngle);
+            outputBundle.putInt("outputHoldType", outputHoldType);
             outputBundle.putInt("outputIsComplete", outputIsComplete);
 
             return outputBundle;
@@ -248,8 +258,47 @@ public class DatabaseReadWrite {
 
         try {
             cursor.moveToFirst();
-            String outputString = cursor.getString(idColumnOutput);
-            return outputString;
+            return cursor.getString(idColumnOutput);
+        } finally {
+            cursor.close();
+            database.close();
+        }
+
+
+    }
+
+    /**
+     * Get the Hold type name for a given ID
+     *
+     * @param infoCode the ascent type ID
+     * @param mContext the context
+     * @return A string containing the Hold Type Name
+     */
+    public static String getHoldTypeText(int infoCode, Context mContext) {
+
+        DatabaseHelper handler = new DatabaseHelper(mContext);
+        SQLiteDatabase database = handler.getWritableDatabase();
+
+        //ascent type
+        String[] projection = {
+                DatabaseContract.HoldTypeEntry._ID,
+                DatabaseContract.HoldTypeEntry.COLUMN_HOLDTYPE};
+        String whereClause = DatabaseContract.HoldTypeEntry._ID + "=?";
+        String[] whereValue = {String.valueOf(infoCode)};
+
+        Cursor cursor = database.query(DatabaseContract.HoldTypeEntry.TABLE_NAME,
+                projection,
+                whereClause,
+                whereValue,
+                null,
+                null,
+                null);
+
+        int idColumnOutput = cursor.getColumnIndex(DatabaseContract.HoldTypeEntry.COLUMN_HOLDTYPE);
+
+        try {
+            cursor.moveToFirst();
+            return cursor.getString(idColumnOutput);
         } finally {
             cursor.close();
             database.close();
@@ -289,8 +338,7 @@ public class DatabaseReadWrite {
 
         try {
             cursor.moveToFirst();
-            String outputString = cursor.getString(idColumnOutput);
-            return outputString;
+            return cursor.getString(idColumnOutput);
         } finally {
             cursor.close();
             database.close();
@@ -329,8 +377,7 @@ public class DatabaseReadWrite {
 
         try {
             cursor.moveToFirst();
-            String outputString = cursor.getString(idColumnOutput);
-            return outputString;
+            return cursor.getString(idColumnOutput);
         } finally {
             cursor.close();
             database.close();
@@ -446,8 +493,7 @@ public class DatabaseReadWrite {
 
         try {
             cursor.moveToFirst();
-            String outputString = cursor.getString(idColumnOutput);
-            return outputString;
+            return cursor.getString(idColumnOutput);
         } finally {
             cursor.close();
             database.close();
@@ -486,8 +532,7 @@ public class DatabaseReadWrite {
 
         try {
             cursor.moveToFirst();
-            String outputString = cursor.getString(idColumnOutput);
-            return outputString;
+            return cursor.getString(idColumnOutput);
         } finally {
             cursor.close();
             database.close();
@@ -518,6 +563,8 @@ public class DatabaseReadWrite {
                 DatabaseContract.WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET,
                 DatabaseContract.WorkoutListEntry.COLUMN_ISSETCOUNT,
                 DatabaseContract.WorkoutListEntry.COLUMN_ISMOVECOUNT,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISWALLANGLE,
+                DatabaseContract.WorkoutListEntry.COLUMN_ISHOLDTYPE,
                 DatabaseContract.WorkoutListEntry.COLUMN_ISWEIGHT};
         String whereClause = DatabaseContract.WorkoutListEntry._ID + "=?";
         String[] whereValue = {String.valueOf(inputRowID)};
@@ -555,6 +602,12 @@ public class DatabaseReadWrite {
             idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISMOVECOUNT);
             int outputIsMoveCount = cursor.getInt(idColumnOutput);
 
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISWALLANGLE);
+            int outputIsWallAngle = cursor.getInt(idColumnOutput);
+
+            idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISHOLDTYPE);
+            int outputIsHoldType = cursor.getInt(idColumnOutput);
+
             idColumnOutput = cursor.getColumnIndex(DatabaseContract.WorkoutListEntry.COLUMN_ISWEIGHT);
             int outputIsWeight = cursor.getInt(idColumnOutput);
 
@@ -565,6 +618,8 @@ public class DatabaseReadWrite {
             outputBundle.putInt("outputIsRestDuratonPerSet", outputIsRestDuratonPerSet);
             outputBundle.putInt("outputIsSetCount", outputIsSetCount);
             outputBundle.putInt("outputIsMoveCount", outputIsMoveCount);
+            outputBundle.putInt("outputIsWallAngle", outputIsWallAngle);
+            outputBundle.putInt("outputIsHoldType", outputIsHoldType);
             outputBundle.putInt("outputIsWeight", outputIsWeight);
 
             return outputBundle;
@@ -592,7 +647,7 @@ public class DatabaseReadWrite {
      * @param mContext        Context
      * @return
      */
-    public static long writeWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, Context mContext) {
+    public static long writeWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int holdType, int wallAngle, Context mContext) {
         // Gets the database in write mode
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(mContext);
@@ -612,6 +667,8 @@ public class DatabaseReadWrite {
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADETYPECODE, gradeTypeCode); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_MOVECOUNT, moveCount); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADECODE, gradeCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_HOLDTYPE, holdType); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WALLANGLE, wallAngle); // int
 
 
         long newRowId = database.insert(DatabaseContract.WorkoutLogEntry.TABLE_NAME, null, values);
@@ -636,7 +693,7 @@ public class DatabaseReadWrite {
      * @param mContext        Context
      * @return
      */
-    public static long updateWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int rowID, Context mContext) {
+    public static long updateWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int holdType, int wallAngle, int rowID, Context mContext) {
         // Gets the database in write mode
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(mContext);
@@ -656,6 +713,8 @@ public class DatabaseReadWrite {
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADETYPECODE, gradeTypeCode); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_MOVECOUNT, moveCount); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADECODE, gradeCode); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_HOLDTYPE, holdType); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WALLANGLE, wallAngle); // int
 
         String whereClauseFive = DatabaseContract.WorkoutLogEntry._ID + "=?";
         String[] whereValueFive = {String.valueOf(rowID)};
@@ -722,8 +781,7 @@ public class DatabaseReadWrite {
 
         try {
             cursor.moveToFirst();
-            int outputRowID = cursor.getInt(idColumnOutput);
-            return outputRowID;
+            return cursor.getInt(idColumnOutput);
         } finally {
             cursor.close();
             database.close();
@@ -760,8 +818,7 @@ public class DatabaseReadWrite {
 
         try {
             cursor.moveToFirst();
-            int outputIsClimb = cursor.getInt(idColumnOutput);
-            return outputIsClimb;
+            return cursor.getInt(idColumnOutput);
         } finally {
             cursor.close();
             database.close();
@@ -885,6 +942,30 @@ public class DatabaseReadWrite {
                 DatabaseContract.AscentEntry.COLUMN_DESCRIPTION};
 
         Cursor cursor = db.query(DatabaseContract.AscentEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        return cursor;
+    }
+
+    /**
+     * return a cursor for all hold types
+     *
+     * @param db the database being queried
+     * @return Cursor cursor
+     */
+    public static Cursor getHoldTypeList(SQLiteDatabase db) {
+        //grade type
+        String[] projection = {
+                DatabaseContract.HoldTypeEntry._ID,
+                DatabaseContract.HoldTypeEntry.COLUMN_HOLDTYPE,
+                DatabaseContract.HoldTypeEntry.COLUMN_DESCRIPTION};
+
+        Cursor cursor = db.query(DatabaseContract.HoldTypeEntry.TABLE_NAME,
                 projection,
                 null,
                 null,

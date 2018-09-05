@@ -54,7 +54,7 @@ public class AddClimb extends AppCompatActivity {
             // Add a new climb, don't import any data to the form
             //outputDate = Calendar.getInstance().getTimeInMillis();
             String outputDateString = TimeUtils.convertDate(outputDate, "yyyy-MM-dd");
-            EditText dateView = (EditText) findViewById(R.id.editText5);
+            EditText dateView = findViewById(R.id.editText5);
             dateView.setText(outputDateString);
 
         } else if (inputIntentCode == ADD_CLIMB_EDIT) {
@@ -63,20 +63,20 @@ public class AddClimb extends AppCompatActivity {
             // Load climb log data for a specific row ID
             Bundle bundle = DatabaseReadWrite.EditClimbLoadEntry(inputRowID, this);
 
-            EditText routeNameView = (EditText) findViewById(R.id.editText);
+            EditText routeNameView = findViewById(R.id.editText);
             outputRouteName = bundle.getString("outputRouteName");
             routeNameView.setText(outputRouteName);
 
-            EditText locationNameView = (EditText) findViewById(R.id.editText2);
+            EditText locationNameView = findViewById(R.id.editText2);
             outputLocationName = bundle.getString("outputLocationName");
             locationNameView.setText(outputLocationName);
 
-            EditText dateView = (EditText) findViewById(R.id.editText5);
+            EditText dateView = findViewById(R.id.editText5);
             outputDate = bundle.getLong("outputDate");
             outputDateString = bundle.getString("outputDateString");
             dateView.setText(outputDateString);
 
-            CheckBox firstAscentCheckBox = (CheckBox) findViewById(R.id.checkbox_firstascent);
+            CheckBox firstAscentCheckBox = findViewById(R.id.checkbox_firstascent);
             outputFirstAscent = bundle.getInt("outputFirstAscent");
             if (outputFirstAscent == DatabaseContract.FIRSTASCENT_TRUE) {
                 firstAscentCheckBox.setChecked(true);
@@ -91,18 +91,18 @@ public class AddClimb extends AppCompatActivity {
             // Get grade name
             String outputStringGradeName = DatabaseReadWrite.getGradeTextClimb(outputGradeNumber, this);
             String outputStringGradeType = DatabaseReadWrite.getGradeTypeClimb(outputGradeName, this);
-            EditText gradeView = (EditText) findViewById(R.id.editText4);
+            EditText gradeView = findViewById(R.id.editText4);
             gradeView.setText(outputStringGradeType + " | " + outputStringGradeName);
 
             // Set ascent type
             String outputStringAscentType = DatabaseReadWrite.getAscentNameTextClimb(outputAscent, this);
-            EditText ascentTypeView = (EditText) findViewById(R.id.editText3);
+            EditText ascentTypeView = findViewById(R.id.editText3);
             ascentTypeView.setText(outputStringAscentType);
         }
 
 
         // Listener for the grade selection
-        EditText gradeView = (EditText) findViewById(R.id.editText4);
+        EditText gradeView = findViewById(R.id.editText4);
         gradeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +111,7 @@ public class AddClimb extends AppCompatActivity {
         });
 
         // Listener for the ascent-type selection
-        EditText ascentTypeView = (EditText) findViewById(R.id.editText3);
+        EditText ascentTypeView = findViewById(R.id.editText3);
         ascentTypeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,13 +120,13 @@ public class AddClimb extends AppCompatActivity {
         });
 
         // Listener for the save button
-        Button saveButton = (Button) findViewById(R.id.log_climb_save);
+        Button saveButton = findViewById(R.id.log_climb_save);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText routeNameView = (EditText) findViewById(R.id.editText);
-                EditText locationNameView = (EditText) findViewById(R.id.editText2);
-                CheckBox firstAscentCheckBox = (CheckBox) findViewById(R.id.checkbox_firstascent);
+                EditText routeNameView = findViewById(R.id.editText);
+                EditText locationNameView = findViewById(R.id.editText2);
+                CheckBox firstAscentCheckBox = findViewById(R.id.checkbox_firstascent);
 
                 outputRouteName = routeNameView.getText().toString();
                 outputLocationName = locationNameView.getText().toString();
@@ -158,7 +158,7 @@ public class AddClimb extends AppCompatActivity {
         });
 
         // Listener for the cancel button
-        Button cancelButton = (Button) findViewById(R.id.log_climb_cancel);
+        Button cancelButton = findViewById(R.id.log_climb_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,14 +177,12 @@ public class AddClimb extends AppCompatActivity {
             } else {
                 Log.i(LOG_TAG, "result not okay");
             }
-            // TODO: Error handler for nothing passed back
         } else if (requestCode == PICK_ASCENT_TYPE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 putAscent(data);
             } else {
                 Log.i(LOG_TAG, "result not okay");
             }
-            // TODO: Error handler for nothing passed back
         }
     }
 
@@ -214,7 +212,7 @@ public class AddClimb extends AppCompatActivity {
         // Put grade text date in the view
         outputGradeName = data.getIntExtra("OutputGradeName", 0);
         String outputStringGradeType = DatabaseReadWrite.getGradeTypeClimb(outputGradeName, this);
-        EditText gradeView = (EditText) findViewById(R.id.editText4);
+        EditText gradeView = findViewById(R.id.editText4);
         gradeView.setText(outputStringGradeType + " | " + outputStringGradeName);
     }
 
@@ -224,7 +222,7 @@ public class AddClimb extends AppCompatActivity {
 
         //Create handler to connect to SQLite DB
         String outputStringAscentType = DatabaseReadWrite.getAscentNameTextClimb(outputAscent, this);
-        EditText gradeView = (EditText) findViewById(R.id.editText3);
+        EditText gradeView = findViewById(R.id.editText3);
         gradeView.setText(outputStringAscentType);
     }
 

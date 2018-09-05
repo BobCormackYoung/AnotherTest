@@ -14,6 +14,7 @@ import com.example.android.anothertest.data.DatabaseContract.GradeTypeEntry;
 import com.example.android.anothertest.data.DatabaseContract.WorkoutListEntry;
 import com.example.android.anothertest.data.DatabaseContract.WorkoutLogEntry;
 import com.example.android.anothertest.data.DatabaseContract.WorkoutTypeEntry;
+import com.example.android.anothertest.data.DatabaseContract.HoldTypeEntry;
 
 import java.util.Calendar;
 
@@ -115,6 +116,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WorkoutLogEntry.COLUMN_GRADETYPECODE + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_GRADECODE + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_MOVECOUNT + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_WALLANGLE + " INTEGER, "
+                + WorkoutLogEntry.COLUMN_HOLDTYPE + " INTEGER, "
                 + WorkoutLogEntry.COLUMN_ISCOMPLETE + " INTEGER);";
 
         // Execute the SQL statement
@@ -133,7 +136,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WorkoutListEntry.COLUMN_ISREPDURATIONPERSET + " INTEGER, "
                 + WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET + " INTEGER, "
                 + WorkoutListEntry.COLUMN_ISGRADECODE + " INTEGER, "
-                + WorkoutListEntry.COLUMN_ISMOVECOUNT + " INTEGER);";
+                + WorkoutListEntry.COLUMN_ISMOVECOUNT + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISWALLANGLE + " INTEGER, "
+                + WorkoutListEntry.COLUMN_ISHOLDTYPE + " INTEGER);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_WORKOUTLIST_TABLE);
@@ -147,6 +152,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_WORKOUTTYPE_TABLE);
 
+        // Create a String that contains the SQL statement to create the climb log table
+        String SQL_CREATE_HOLDTYPE_TABLE = "CREATE TABLE " + HoldTypeEntry.TABLE_NAME + " ("
+                + HoldTypeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, "
+                + HoldTypeEntry.COLUMN_HOLDTYPE + " TEXT, "
+                + HoldTypeEntry.COLUMN_DESCRIPTION + " TEXT);";
+
+        // Execute the SQL statement
+        db.execSQL(SQL_CREATE_HOLDTYPE_TABLE);
+
         Log.i(LOG_TAG, "Database Creation Method Run");
 
         insertInitialGradeListData(db);
@@ -158,6 +172,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         insertInitialWorkoutTypeData(db);
 
         insertInitialWorkoutListData(db);
+
+        insertInitialHoldTypeData(db);
 
         Log.i(LOG_TAG, "Database Initial Fill Method Run");
 
@@ -2121,7 +2137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         values.clear();
         values = new ContentValues();
-        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Climbing-gym");
+        values.put(WorkoutTypeEntry.COLUMN_WORKOUTTYPENAME, "Gym Climb");
         values.put(WorkoutTypeEntry.COLUMN_DESCRIPTION, "Exercises done at the climbing gym, i.e. traverses, lead-climbs, boulders, series.");
         db.insert(WorkoutTypeEntry.TABLE_NAME, null, values);
 
@@ -2167,6 +2183,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2182,6 +2200,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Integer
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Integer
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Integer
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2197,6 +2217,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2212,21 +2234,110 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
         values = new ContentValues();
-        values.put(WorkoutListEntry.COLUMN_NAME, "Random Endurance Workout"); // Text
+        values.put(WorkoutListEntry.COLUMN_NAME, "Traverse - indoor"); // Text
         values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
-        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "Description"); // Text
-        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "An single indoor climb with a high number of moves, usually performed without a rope, in bouldering style, with a set number of moves and certain grade."); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_TRUE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Bouldering - indoor"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "An indoor bouldering route of a certain grade."); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_TRUE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Lead Climbing - indoor"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "A single indoor lead-climb of a certain grade."); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_TRUE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Top-Rope Climbing - indoor"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "A single indoor top-roped climb of a certain grade."); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_TRUE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Interval Climb - Lead"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "A single indoor lead climb, of a certain grade, repeated multiple times with a fixed rest-period."); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
-        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_TRUE); // Text
+        db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(WorkoutListEntry.COLUMN_NAME, "Interval Climb - Bouldering"); // Text
+        values.put(WorkoutListEntry.COLUMN_WORKOUTTYPECODE, 2); // Integer
+        values.put(WorkoutListEntry.COLUMN_DESCRIPTION, "A single indoor bouldering climb, of a certain grade, repeated multiple times with a fixed rest-period."); // Text
+        values.put(WorkoutListEntry.COLUMN_ISCLIMB, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWEIGHT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISSETCOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPCOUNTPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISREPDURATIONPERSET, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_TRUE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_TRUE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2242,6 +2353,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2257,6 +2370,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2272,6 +2387,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2287,6 +2404,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
         values.clear();
 
@@ -2302,7 +2421,103 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(WorkoutListEntry.COLUMN_ISRESTDURATIONPERSET, DatabaseContract.IS_TRUE); // Text
         values.put(WorkoutListEntry.COLUMN_ISGRADECODE, DatabaseContract.IS_FALSE); // Text
         values.put(WorkoutListEntry.COLUMN_ISMOVECOUNT, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISWALLANGLE, DatabaseContract.IS_FALSE); // Text
+        values.put(WorkoutListEntry.COLUMN_ISHOLDTYPE, DatabaseContract.IS_FALSE); // Text
         db.insert(WorkoutListEntry.TABLE_NAME, null, values);
+        values.clear();
+
+    }
+
+    public void insertInitialHoldTypeData(SQLiteDatabase db) {
+
+        ContentValues values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Crimp, General");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping using one of the 3 key crimp techniques (open-hand, half-crimp, or full-crimp).");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Full-Crimp, Half-Pad");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb locked over the finger-tips. Using half the finger-tip pad.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Full-Crimp, Full-Pad");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb locked over the finger-tips. Using the entire finger-tip pad.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Half-Crimp, Half-Pad");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb free and fingers locked at 90deg. Using half the finger-tip pad.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Half-Crimp, Full-Pad");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb free and fingers locked at 90deg. Using the entire finger-tip pad.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Half-Crimp, Two-pads");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb free and fingers locked at 90deg. Using the finger up-to and including past the first knuckle.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Open-Hand, Half-Pad");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb free and fingers not locked. Using half the finger-tip pad.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Open-Hand, Full-Pad");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb free and fingers not locked. Using the entire finger-tip pad.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Open-Hand, Two-pads");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Crimping with the thumb free and fingers not locked. Using the finger up-to and including past the first knuckle.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Sloper");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Leveraging the entire hand for friction when there is no definite edge.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Pinch");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Pinching a hold between fingers and thumb.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Side-Pull");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Holds held from the side, as opposed from above or below.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Under-Cling");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Holds held from underneath, as opposed from above or the side.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Pocket");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Holds resembling holes, used by inserting as many fingers as possible.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
+        values.clear();
+
+        values = new ContentValues();
+        values.put(HoldTypeEntry.COLUMN_HOLDTYPE, "Jam");
+        values.put(HoldTypeEntry.COLUMN_DESCRIPTION, "Holds held by jamming/wedging fingers, hands, or arms inside them.");
+        db.insert(HoldTypeEntry.TABLE_NAME, null, values);
         values.clear();
 
     }

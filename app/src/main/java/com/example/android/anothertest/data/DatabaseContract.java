@@ -16,6 +16,8 @@ public final class DatabaseContract {
     public final static int IS_COMPLETE = 1;
     public final static int IS_INCOMPLETE = 0;
     public final static int IS_TRUE = 1;
+    public final static int IS_TRUE_REQUIRED = 1;
+    public final static int IS_TRUE_NOTREQUIRED = 2;
     public final static int IS_FALSE = 0;
 
     private DatabaseContract() {}
@@ -94,6 +96,8 @@ public final class DatabaseContract {
         public final static String COLUMN_GRADETYPECODE = "GradeTypeCode";
         public final static String COLUMN_GRADECODE = "GradeCode";
         public final static String COLUMN_MOVECOUNT = "MoveCount";
+        public final static String COLUMN_WALLANGLE = "WallAngle";
+        public final static String COLUMN_HOLDTYPE = "HoldType";
         public final static String COLUMN_ISCOMPLETE = "IsComplete";
 
     }
@@ -114,6 +118,8 @@ public final class DatabaseContract {
         public final static String COLUMN_ISRESTDURATIONPERSET = "IsRestDurationPerSet";
         public final static String COLUMN_ISGRADECODE = "IsGradeCode";
         public final static String COLUMN_ISMOVECOUNT = "IsMoveCount";
+        public final static String COLUMN_ISWALLANGLE = "IsWallAngle";
+        public final static String COLUMN_ISHOLDTYPE = "IsHoldType";
 
     }
 
@@ -126,5 +132,16 @@ public final class DatabaseContract {
         public final static String COLUMN_DESCRIPTION = "Description";
 
     }
+
+    public final static class HoldTypeEntry implements BaseColumns {
+
+        public final static String TABLE_NAME = "HoldType";
+
+        public final static String _ID = BaseColumns._ID;
+        public final static String COLUMN_HOLDTYPE = "Name";
+        public final static String COLUMN_DESCRIPTION = "Description";
+
+    }
+
 
 }

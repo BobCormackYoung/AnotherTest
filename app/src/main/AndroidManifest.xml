@@ -25,6 +25,7 @@
         <activity android:name=".logbookmodule.gradepicker.ChildGradeHolder" />
         <activity android:name=".logbookmodule.gradepicker.ParentGradeHolder" />
         <activity android:name=".logbookmodule.ascentpicker.AscentHolder" />
+        <activity android:name=".logbookmodule.holdtypepicker.HoldTypeHolder" />
         <activity android:name=".logbookmodule.AddWorkout" />
         <activity android:name=".logbookmodule.workoutpicker.ParentWorkoutHolder" />
         <activity android:name=".logbookmodule.workoutpicker.ChildWorkoutHolder" />
