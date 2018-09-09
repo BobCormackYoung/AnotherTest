@@ -647,7 +647,7 @@ public class DatabaseReadWrite {
      * @param mContext        Context
      * @return
      */
-    public static long writeWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int holdType, int wallAngle, Context mContext) {
+    public static long writeWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int holdType, int wallAngle, int isComplete, Context mContext) {
         // Gets the database in write mode
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(mContext);
@@ -669,6 +669,7 @@ public class DatabaseReadWrite {
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADECODE, gradeCode); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_HOLDTYPE, holdType); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WALLANGLE, wallAngle); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_ISCOMPLETE, isComplete); // int
 
 
         long newRowId = database.insert(DatabaseContract.WorkoutLogEntry.TABLE_NAME, null, values);
@@ -693,7 +694,7 @@ public class DatabaseReadWrite {
      * @param mContext        Context
      * @return
      */
-    public static long updateWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int holdType, int wallAngle, int rowID, Context mContext) {
+    public static long updateWorkoutLogData(long date, int workoutTypeCode, int workoutCode, double weight, int setCount, int repCount, int repDuration, int restDuration, int gradeTypeCode, int gradeCode, int moveCount, int holdType, int wallAngle, int rowID, int isComplete, Context mContext) {
         // Gets the database in write mode
         //Create handler to connect to SQLite DB
         DatabaseHelper handler = new DatabaseHelper(mContext);
@@ -715,6 +716,7 @@ public class DatabaseReadWrite {
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_GRADECODE, gradeCode); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_HOLDTYPE, holdType); // int
         values.put(DatabaseContract.WorkoutLogEntry.COLUMN_WALLANGLE, wallAngle); // int
+        values.put(DatabaseContract.WorkoutLogEntry.COLUMN_ISCOMPLETE, isComplete); // int
 
         String whereClauseFive = DatabaseContract.WorkoutLogEntry._ID + "=?";
         String[] whereValueFive = {String.valueOf(rowID)};

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -51,11 +52,13 @@ public class AddWorkout extends AppCompatActivity {
     int triggerMoveCount = 0;
     int triggerWallAngle = 0;
     int triggerHoldType = 0;
+
     // Initialise output values
     long outputDate = -1;
     int outputGradeNumber = -1;
     int outputGradeName = -1;
     int outputHoldType = -1;
+    int outputCompleteCheckedState = 0; // 1 = checked/complete, 0 = unchecked/incomplete
 
     // Initialise counters
     double counterWeight = 0;
@@ -65,6 +68,7 @@ public class AddWorkout extends AppCompatActivity {
     int counterSetCount = 1;
     int counterMoveCount = 0;
     int counterWallAngle = 0;
+
 
     TextView titleWrapper; // Title wrapper
 
@@ -137,6 +141,9 @@ public class AddWorkout extends AppCompatActivity {
     LinearLayout workoutHoldTypeWrapper; // Hold Type Wrapper
     EditText workoutHoldTypeEditText; // Hold Type EditText
 
+    LinearLayout workoutCompleteWrapper; // Hold Type Wrapper
+    CheckBox workoutCompleteCheckBox; // Hold Type EditText
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,6 +178,8 @@ public class AddWorkout extends AppCompatActivity {
             workoutWallAngleWrapper.setVisibility(View.GONE);
             // Hold Type Input Wrapper
             workoutHoldTypeWrapper.setVisibility(View.GONE);
+            // Complete Input Wrapper
+            workoutCompleteWrapper.setVisibility(View.GONE);
 
         } else if (inputIntentCode == ADD_WORKOUT_EDIT) {
 
@@ -290,9 +299,13 @@ public class AddWorkout extends AppCompatActivity {
         workoutWallAngleButtonMinusBig = findViewById(R.id.workoutButtonMinus10a);
         workoutWallAngleButtonPlusBig = findViewById(R.id.workoutButtonPlus10a);
 
-        // Hod Type Input Wrapper
+        // Hold Type Input Wrapper
         workoutHoldTypeWrapper = findViewById(R.id.workoutTextWrapper11);
         workoutHoldTypeEditText = findViewById(R.id.workoutEditText11);
+
+        // Completeness Input Wrapper
+        workoutCompleteWrapper = findViewById(R.id.workoutTextWrapper12);
+        workoutCompleteCheckBox = findViewById(R.id.workoutCheckBox12);
 
     }
 
@@ -316,10 +329,16 @@ public class AddWorkout extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                if (workoutCompleteCheckBox.isChecked()) {
+                    outputCompleteCheckedState = 1;
+                } else {
+                    outputCompleteCheckedState = 0;
+                }
+
                 if (inputIntentCode == ADD_WORKOUT_NEW) {
                     if (outputWorkoutNumber != -1 && outputWorkoutName != -1) {
                         long outputRow = DatabaseReadWrite.writeWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
-                                counterRepCount, counterRepTime, counterRestTime, outputGradeName, outputGradeNumber, counterMoveCount, outputHoldType, counterWallAngle, AddWorkout.this);
+                                counterRepCount, counterRepTime, counterRestTime, outputGradeName, outputGradeNumber, counterMoveCount, outputHoldType, counterWallAngle, outputCompleteCheckedState, AddWorkout.this);
                         DatabaseReadWrite.writeCalendarUpdate(DatabaseContract.IS_WORKOUT, outputDate, outputRow, AddWorkout.this);
                         Toast.makeText(getApplicationContext(), "New Row ID: " + outputRow, Toast.LENGTH_SHORT).show();
                         finish();
@@ -328,7 +347,7 @@ public class AddWorkout extends AppCompatActivity {
                     }
                 } else if (inputIntentCode == ADD_WORKOUT_EDIT) {
                     long outputRow = DatabaseReadWrite.updateWorkoutLogData(outputDate, outputWorkoutName, outputWorkoutNumber, counterWeight, counterSetCount,
-                            counterRepCount, counterRepTime, counterRestTime, outputGradeName, outputGradeNumber, counterMoveCount, outputHoldType, counterWallAngle, inputRowID, AddWorkout.this);
+                            counterRepCount, counterRepTime, counterRestTime, outputGradeName, outputGradeNumber, counterMoveCount, outputHoldType, counterWallAngle, inputRowID, outputCompleteCheckedState, AddWorkout.this);
                     Toast.makeText(getApplicationContext(), "New Row ID: " + outputRow, Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -805,6 +824,7 @@ public class AddWorkout extends AppCompatActivity {
             triggerHoldType = 0;
         }
 
+        workoutCompleteWrapper.setVisibility(View.VISIBLE);
 
     }
 
@@ -867,6 +887,7 @@ public class AddWorkout extends AppCompatActivity {
         outputGradeNumber = -1;
         outputGradeName = -1;
         outputHoldType = -1;
+        outputCompleteCheckedState = 0;
 
         // reset counters
         counterWeight = 0;
@@ -912,6 +933,12 @@ public class AddWorkout extends AppCompatActivity {
             workoutTrainingEditText.setText(outputStringWorkoutType + " | " + outputStringWorkoutName);
         }
 
+        if (outputCompleteCheckedState == 0) {
+            workoutCompleteCheckBox.setChecked(false);
+        } else if (outputCompleteCheckedState == 1) {
+            workoutCompleteCheckBox.setChecked(true);
+        }
+
     }
 
     private void getWorkoutInfoFromBundle(Bundle inputBundle) {
@@ -927,6 +954,7 @@ public class AddWorkout extends AppCompatActivity {
         counterMoveCount = inputBundle.getInt("outputMoveCount");
         counterWallAngle = inputBundle.getInt("outputWallAngle");
         outputHoldType = inputBundle.getInt("outputHoldType");
+        outputCompleteCheckedState = inputBundle.getInt("outputIsComplete");
     }
 
 }
